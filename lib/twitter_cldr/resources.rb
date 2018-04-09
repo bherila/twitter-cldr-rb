@@ -22,6 +22,7 @@ module TwitterCldr
     autoload :RegexpAstGenerator,             'twitter_cldr/resources/regexp_ast_generator'
     autoload :Requirements,                   'twitter_cldr/resources/requirements'
     autoload :SegmentTestsImporter,           'twitter_cldr/resources/segment_tests_importer'
+    autoload :SegmentDictionariesImporter,    'twitter_cldr/resources/segment_dictionaries_importer'
     autoload :TailoringImporter,              'twitter_cldr/resources/tailoring_importer'
     autoload :TransformTestImporter,          'twitter_cldr/resources/transform_test_importer'
     autoload :UnicodeDataImporter,            'twitter_cldr/resources/unicode_data_importer'
@@ -45,6 +46,7 @@ module TwitterCldr
           PostalCodesImporter,
           RbnfTestImporter,
           SegmentTestsImporter,
+          SegmentDictionariesImporter,
           TailoringImporter,
           TransformTestImporter,
           UnicodeDataImporter,

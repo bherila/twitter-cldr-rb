@@ -116,6 +116,11 @@ module TwitterCldr
         self.class.new(range_set.ranges + ranges)
       end
 
+      def union!(range_set)
+        ranges.concat(range_set.ranges)
+        flatten
+      end
+
       def intersection(range_set)
         new_ranges = []
 

@@ -56,12 +56,15 @@ module TwitterCldr
       end
 
       def get(key)
-        final = key.inject(@root) do |node, key_element|
+        found = get_node(key)
+        found && found.value
+      end
+
+      def get_node(key)
+        key.inject(@root) do |node, key_element|
           return unless node
           node.child(key_element)
         end
-
-        final && final.value
       end
 
       # Finds the longest substring of the `key` that matches, as a key, a node in the trie.

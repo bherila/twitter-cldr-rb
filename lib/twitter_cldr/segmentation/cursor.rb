@@ -6,7 +6,8 @@
 module TwitterCldr
   module Segmentation
     class Cursor
-      attr_reader :text, :position, :match_cache
+      attr_reader :text, :match_cache
+      attr_accessor :position
 
       def initialize(text)
         @text = text

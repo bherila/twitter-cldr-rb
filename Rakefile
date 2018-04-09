@@ -138,9 +138,14 @@ namespace :update do
     TwitterCldr::Resources::Uli::SegmentExceptionsImporter.new.import
   end
 
-  desc 'Import segment tests'
+  desc 'Import segmentation tests'
   task :segment_tests do
     TwitterCldr::Resources::SegmentTestsImporter.new.import
+  end
+
+  desc 'Import segmentation dictionaries'
+  task :segment_dictionaries do
+    TwitterCldr::Resources::SegmentDictionariesImporter.new.import
   end
 
   desc 'Import hyphenation dictionaries'
