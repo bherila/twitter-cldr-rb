@@ -21,14 +21,18 @@ module TwitterCldr
             set << range
           end
         end
+
+        self
       end
 
       def add(codepoint)
         set << (codepoint..codepoint)
+        self
       end
 
       def add_set(unicode_set)
         set.union!(unicode_set.set)
+        self
       end
 
       def each(&block)

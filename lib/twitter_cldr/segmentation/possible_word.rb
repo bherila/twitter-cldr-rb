@@ -8,7 +8,7 @@ module TwitterCldr
     class PossibleWord
       # list size, limited by the maximum number of words in the dictionary
       # that form a nested sequence.
-      POSSIBLE_WORD_LIST_MAX = 20;
+      POSSIBLE_WORD_LIST_MAX = 20
 
       def initialize
         @lengths = Array.new(POSSIBLE_WORD_LIST_MAX)
@@ -17,16 +17,16 @@ module TwitterCldr
       end
 
       # fill the list of candidates if needed, select the longest, and return the number found
-      def candidates(cursor, dictionary, range_end)
-        start = cursor.pos
+      def candidates(cursor, dictionary, end_pos)
+        start = cursor.position
 
         if start != @offset
           @offset = start
-          @count, _, @lengths, @prefix = dict.matches(
-            cursor.text, cursor.position, range_end - start, @lengths.length
+          @count, _, @lengths, @prefix = dictionary.matches(
+            cursor.text, cursor.position, end_pos - start, @lengths.length
           )
 
-          # dictionary leaves text after longest prefix, not longest word. Back up.
+          # dictionary leaves text after longest prefix, not longest word, so back up.
           if @count <= 0
             cursor.position = start
           end
@@ -43,14 +43,14 @@ module TwitterCldr
       end
 
       # select the currently marked candidate, point after it in the text, and invalidate self
-      def accept_marked(cursor) {
+      def accept_marked(cursor)
         cursor.position = @offset + @lengths[@mark]
         @lengths[@mark]
       end
 
       # back up from the current candidate to the next shorter one; return true if that exists
       # and point the text after it
-      def back_up(cursor) {
+      def back_up(cursor)
         if @current > 0
           cursor.position - @offset + @lengths[@current]
           @current -= 1

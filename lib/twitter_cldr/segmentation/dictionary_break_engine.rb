@@ -8,13 +8,42 @@ module TwitterCldr
     class DictionaryBreakEngine
 
       def each_boundary(text, &block)
+        return to_enum(__method__, text) unless block_given?
+
         text = TwitterCldr::Normalization.normalize(text, using: :nfkc)
-        codepoints = text.codepoints
+        cursor = Cursor.new(text.codepoints, start_position: 0)
 
-        stop = codepoints.find_index { |cp| !fset.include?(cp) }
-        stop ||= codepoints.size - 1
+        last_boundary = 0
+        yield 0
 
-        divide_up_dictionary_range(codepoints, 0, stop).each(&block)
+        until cursor.eos?
+          stop = cursor.position
+
+          while !cursor.eos? && fset.include?(cursor.text[stop])
+            stop += 1
+          end
+
+          divide_up_dictionary_range(cursor, stop).each do |boundary|
+            last_boundary = boundary
+            yield boundary
+          end
+
+          skip_char_count = 0
+
+          until cursor.eos? || fset.include?(cursor.current)
+            cursor.advance
+            skip_char_count += 1
+          end
+
+          if skip_char_count > 0
+            last_boundary = cursor.position
+            yield cursor.position
+          end
+        end
+
+        if last_boundary < cursor.length
+          yield cursor.length
+        end
       end
 
       private
