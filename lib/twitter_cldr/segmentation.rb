@@ -5,6 +5,7 @@
 
 module TwitterCldr
   module Segmentation
+    autoload :BrahmicBreakEngine,    'twitter_cldr/segmentation/brahmic_break_engine'
     autoload :BreakIterator,         'twitter_cldr/segmentation/break_iterator'
     autoload :BreakRule,             'twitter_cldr/segmentation/rule'
     autoload :BurmeseBreakEngine,    'twitter_cldr/segmentation/burmese_break_engine'
@@ -12,8 +13,9 @@ module TwitterCldr
     autoload :CjBreakEngine,         'twitter_cldr/segmentation/cj_break_engine'
     autoload :Dictionary,            'twitter_cldr/segmentation/dictionary'
     autoload :DictionaryBreakEngine, 'twitter_cldr/segmentation/dictionary_break_engine'
+    autoload :KhmerBreakEngine,      'twitter_cldr/segmentation/khmer_break_engine'
+    autoload :LaoBreakEngine,        'twitter_cldr/segmentation/lao_break_engine'
     autoload :NoBreakRule,           'twitter_cldr/segmentation/rule'
-    autoload :PaliBreakEngine,       'twitter_cldr/segmentation/pali_break_engine'
     autoload :Parser,                'twitter_cldr/segmentation/parser'
     autoload :PossibleWord,          'twitter_cldr/segmentation/possible_word'
     autoload :PossibleWordList,      'twitter_cldr/segmentation/possible_word_list'

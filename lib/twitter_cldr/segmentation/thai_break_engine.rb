@@ -3,19 +3,13 @@
 # Copyright 2012 Twitter, Inc
 # http://www.apache.org/licenses/LICENSE-2.0
 
+require 'singleton'
+
 module TwitterCldr
   module Segmentation
-    class ThaiBreakEngine < PaliBreakEngine
+    class ThaiBreakEngine
 
-      # how many words in a row are "good enough"?
-      THAI_LOOKAHEAD = 3
-
-      # will not combine a non-word with a preceding dictionary word longer than this
-      THAI_ROOT_COMBINE_THRESHOLD = 3
-
-      # will not combine a non-word that shares at least this much prefix with a
-      # dictionary word with a preceding word
-      THAI_PREFIX_COMBINE_THRESHOLD = 3
+      include Singleton
 
       # ellision character
       THAI_PAIYANNOI = 0x0E2F
@@ -23,33 +17,28 @@ module TwitterCldr
       # repeat character
       THAI_MAIYAMOK = 0x0E46
 
-      # minimum word size
-      THAI_MIN_WORD = 2
-
-      # minimum number of characters for two words
-      THAI_MIN_WORD_SPAN = THAI_MIN_WORD * 2
-
-      def lookahead
-        THAI_LOOKAHEAD
-      end
-
-      def root_combine_threshold
-        THAI_ROOT_COMBINE_THRESHOLD
-      end
-
-      def prefix_combine_threshold
-        THAI_PREFIX_COMBINE_THRESHOLD
-      end
-
-      def min_word
-        THAI_MIN_WORD_SPAN
-      end
-
-      def fset
-        thai_word_set
+      def each_boundary(*args, &block)
+        engine.each_boundary(*args, &block)
       end
 
       private
+
+      def engine
+        @engine ||= BrahmicBreakEngine.new(
+          lookahead: 3,
+          root_combine_threshold: 3,
+          prefix_combine_threshold: 3,
+          min_word: 4,
+          word_set: thai_word_set,
+          mark_set: mark_set,
+          end_word_set: end_word_set,
+          begin_word_set: begin_word_set,
+          dictionary: Dictionary.thai,
+          advance_past_suffix: -> (*args) do
+            advance_past_suffix(*args)
+          end
+        )
+      end
 
       def advance_past_suffix(cursor, end_pos, state)
         suffix_length = 0
@@ -57,7 +46,7 @@ module TwitterCldr
         if cursor.position < end_pos && state.word_length > 0
           uc = cursor.current
 
-          if state.words[state.words_found].candidates(cursor, dictionary, end_pos) <= 0 && suffix_set.include?(uc)
+          if state.words[state.words_found].candidates(cursor, engine.dictionary, end_pos) <= 0 && suffix_set.include?(uc)
             if uc == THAI_PAIYANNOI
               unless suffix_set.include?(cursor.previous)
                 # skip over previous end and PAIYANNOI
@@ -121,10 +110,6 @@ module TwitterCldr
           set.add(THAI_PAIYANNOI)
           set.add(THAI_MAIYAMOK)
         end
-      end
-
-      def dictionary
-        @dictionary ||= Dictionary.thai
       end
 
     end

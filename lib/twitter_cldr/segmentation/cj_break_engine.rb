@@ -29,24 +29,27 @@ module TwitterCldr
         end
       end
 
-      def divide_up_dictionary_range(codepoints, start_pos, end_pos)
-        codepoints = codepoints[start_pos..end_pos]
-        best_snlp = Array.new(codepoints.size + 1) { LARGE_NUMBER }
-        prev = Array.new(codepoints.size + 1) { -1 }
+      def divide_up_dictionary_range(cursor, end_pos)
+        best_snlp = Array.new(cursor.length + 1) { LARGE_NUMBER }
+        prev = Array.new(cursor.length + 1) { -1 }
 
         best_snlp[0] = 0
+        start_pos = cursor.position
 
-        codepoints.each_with_index do |codepoint, idx|
-          next if best_snlp[idx] == LARGE_NUMBER
+        until cursor.eos?
+          if best_snlp[cursor.position] == LARGE_NUMBER
+            cursor.advance
+            next
+          end
 
-          max_search_length = if idx + MAX_WORD_SIZE < codepoints.size
+          max_search_length = if cursor.position + MAX_WORD_SIZE < cursor.length
             MAX_WORD_SIZE
           else
-            codepoints.size - idx
+            cursor.length - cursor.position
           end
 
           count, values, lengths, _ = dictionary.matches(
-            codepoints, idx, max_search_length, max_search_length
+            cursor.text, cursor.position, max_search_length, max_search_length
           )
 
           if count == 0 || lengths[0] != 1
@@ -56,30 +59,28 @@ module TwitterCldr
           end
 
           count.times do |j|
-            new_snlp = best_snlp[idx] + values[j]
+            new_snlp = best_snlp[cursor.position] + values[j]
 
-            if new_snlp < best_snlp[lengths[j] + idx]
-              best_snlp[lengths[j] + idx] = new_snlp
-              prev[lengths[j] + idx] = idx
+            if new_snlp < best_snlp[lengths[j] + cursor.position]
+              best_snlp[lengths[j] + cursor.position] = new_snlp
+              prev[lengths[j] + cursor.position] = cursor.position
             end
           end
+
+          cursor.advance
         end
 
         t_boundary = []
 
-        if best_snlp[codepoints.size] == LARGE_NUMBER
+        if best_snlp[cursor.length] == LARGE_NUMBER
           t_boundary << codepoints.size
         else
-          idx = codepoints.size
+          idx = cursor.length
 
           while idx > 0
             t_boundary << idx
             idx = prev[idx]
           end
-        end
-
-        if t_boundary.empty? || t_boundary.last > start_pos
-          t_boundary << 0
         end
 
         t_boundary.reverse

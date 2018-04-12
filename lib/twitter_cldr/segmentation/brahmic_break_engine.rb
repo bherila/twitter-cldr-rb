@@ -5,8 +5,8 @@
 
 module TwitterCldr
   module Segmentation
-    # break engine for languages derived from Pali, i.e. Lao, Thai, Khmer, and Burmese
-    class PaliBreakEngine < DictionaryBreakEngine
+    # break engine for languages derived from Brahmic script, i.e. Lao, Thai, Khmer, and Burmese
+    class BrahmicBreakEngine < DictionaryBreakEngine
 
       class EngineState
         attr_accessor :current
@@ -23,7 +23,31 @@ module TwitterCldr
         end
       end
 
+      attr_reader :lookahead, :root_combine_threshold
+      attr_reader :prefix_combine_threshold, :min_word
+      attr_reader :word_set, :mark_set, :end_word_set, :begin_word_set
+      attr_reader :dictionary, :advance_past_suffix
+
+      def initialize(options = {})
+        @lookahead = options.fetch(:lookahead)
+        @root_combine_threshold = options.fetch(:root_combine_threshold)
+        @prefix_combine_threshold = options.fetch(:prefix_combine_threshold)
+        @min_word = options.fetch(:min_word)
+
+        @word_set = options.fetch(:word_set)
+        @mark_set = options.fetch(:mark_set)
+        @end_word_set = options.fetch(:end_word_set)
+        @begin_word_set = options.fetch(:begin_word_set)
+
+        @dictionary = options.fetch(:dictionary)
+        @advance_past_suffix = options.fetch(:advance_past_suffix)
+      end
+
       private
+
+      def fset
+        word_set
+      end
 
       def divide_up_dictionary_range(cursor, end_pos)
         return [] if (end_pos - cursor.position) < min_word
@@ -31,7 +55,7 @@ module TwitterCldr
         state = EngineState.new(
           cursor: cursor,
           end_pos: end_pos,
-          words: PossibleWordList.new(lookahead),
+          words: PossibleWordList.new(lookahead)
         )
 
         while cursor.position < end_pos
@@ -84,7 +108,9 @@ module TwitterCldr
           # We do this in code rather than using a rule so that the heuristic
           # resynch continues to function. For example, one of the suffix characters
           # could be a typo in the middle of a word.
-          state.word_length += advance_past_suffix(cursor, end_pos, state)
+          state.word_length += advance_past_suffix.call(
+            cursor, end_pos, state
+          )
 
           # Did we find a word on this iteration? If so, add it to the list of boundaries.
           if state.word_length > 0

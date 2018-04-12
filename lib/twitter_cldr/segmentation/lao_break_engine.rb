@@ -7,7 +7,7 @@ require 'singleton'
 
 module TwitterCldr
   module Segmentation
-    class BurmeseBreakEngine
+    class LaoBreakEngine
 
       include Singleton
 
@@ -23,41 +23,44 @@ module TwitterCldr
           root_combine_threshold: 3,
           prefix_combine_threshold: 3,
           min_word: 2,
-          word_set: burmese_word_set,
+          word_set: lao_word_set,
           mark_set: mark_set,
           end_word_set: end_word_set,
           begin_word_set: begin_word_set,
-          dictionary: Dictionary.burmese,
+          dictionary: Dictionary.lao,
           advance_past_suffix: -> (*) do
-            0  # not applicable to Burmese
+            0  # not applicable to Lao
           end
         )
       end
 
-      def burmese_word_set
-        @burmese_word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-          set.apply_pattern('[[:Mymr:]&[:Line_Break=SA:]]')
+      private
+
+      def lao_word_set
+        @lao_word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
+          set.apply_pattern('[[:Laoo:]&[:Line_Break=SA:]]')
         end
       end
 
       def mark_set
         @mark_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-          set.apply_pattern('[[:Mymr:]&[:Line_Break=SA:]&[:M:]]')
+          set.apply_pattern('[[:Laoo:]&[:Line_Break=SA:]&[:M:]]')
           set.add(0x0020)
         end
       end
 
       def end_word_set
         @end_word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-          set.add_set(burmese_word_set)
+          set.add_set(lao_word_set)
+          set.subtract_range(0x0EC0..0x0EC4) # prefix vowels
         end
       end
 
       def begin_word_set
         @begin_word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-          # basic consonants and independent vowels
-          set.add(0x1000)
-          set.add(0x102A)
+          set.add_range(0x0E81..0x0EAE)  # basic consonants (including holes for corresponding Thai characters)
+          set.add_range(0x0EDC..0x0EDD)  # digraph consonants (no Thai equivalent)
+          set.add_range(0x0EC0..0x0EC4)  # prefix vowels
         end
       end
 
