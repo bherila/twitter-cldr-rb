@@ -26,12 +26,25 @@ module TwitterCldr
       end
 
       def add(codepoint)
-        set << (codepoint..codepoint)
+        add_range(codepoint..codepoint)
+      end
+
+      def add_range(range)
+        set << range
         self
       end
 
       def add_set(unicode_set)
         set.union!(unicode_set.set)
+        self
+      end
+
+      def subtract(codepoint)
+        subtract_range(codepoint..codepoint)
+      end
+
+      def subtract_range(range)
+        set.subtract!(TwitterCldr::Utils::RangeSet.new([range]))
         self
       end
 

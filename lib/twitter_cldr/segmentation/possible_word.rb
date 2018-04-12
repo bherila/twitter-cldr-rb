@@ -11,7 +11,7 @@ module TwitterCldr
       POSSIBLE_WORD_LIST_MAX = 20
 
       def initialize
-        @lengths = Array.new(POSSIBLE_WORD_LIST_MAX)
+        @lengths = []
         @count = nil
         @offset = -1
       end
@@ -23,7 +23,7 @@ module TwitterCldr
         if start != @offset
           @offset = start
           @count, _, @lengths, @prefix = dictionary.matches(
-            cursor.text, cursor.position, end_pos - start, @lengths.length
+            cursor.text, cursor.position, end_pos - start, POSSIBLE_WORD_LIST_MAX
           )
 
           # dictionary leaves text after longest prefix, not longest word, so back up.
@@ -52,8 +52,8 @@ module TwitterCldr
       # and point the text after it
       def back_up(cursor)
         if @current > 0
-          cursor.position - @offset + @lengths[@current]
           @current -= 1
+          cursor.position = @offset + @lengths[@current]
           return true
         end
 

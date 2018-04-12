@@ -8,32 +8,49 @@ module TwitterCldr
     # break engine for languages derived from Pali, i.e. Lao, Thai, Khmer, and Burmese
     class PaliBreakEngine < DictionaryBreakEngine
 
+      class EngineState
+        attr_accessor :current
+        attr_reader :words
+        attr_accessor :words_found, :word_length
+        attr_reader :boundaries
+
+        def initialize(options = {})
+          @current = options.fetch(:current, 0)
+          @words = options.fetch(:words)
+          @words_found = options.fetch(:words_found, 0)
+          @word_length = options.fetch(:word_length, 0)
+          @boundaries = options.fetch(:boundaries, [])
+        end
+      end
+
       private
 
       def divide_up_dictionary_range(cursor, end_pos)
         return [] if (end_pos - cursor.position) < min_word
 
-        words_found = 0
-        words = PossibleWordList.new(lookahead)
-        boundaries = []
+        state = EngineState.new(
+          cursor: cursor,
+          end_pos: end_pos,
+          words: PossibleWordList.new(lookahead),
+        )
 
         while cursor.position < end_pos
-          current = cursor.position
-          word_length = 0
+          state.current = cursor.position
+          state.word_length = 0
 
           # look for candidate words at the current position
-          candidates = words[words_found].candidates(
+          candidates = state.words[state.words_found].candidates(
             cursor, dictionary, end_pos
           )
 
           # if we found exactly one, use that
           if candidates == 1
-            word_length = words[words_found].accept_marked(cursor)
-            words_found += 1
+            state.word_length = state.words[state.words_found].accept_marked(cursor)
+            state.words_found += 1
           elsif candidates > 1
-            mark_best_candidate(cursor, words, words_found, end_pos)
-            word_length = words[words_found].accept_marked(cursor)
-            words_found += 1
+            mark_best_candidate(cursor, end_pos, state)
+            state.word_length = state.words[state.words_found].accept_marked(cursor)
+            state.words_found += 1
           end
 
           # We come here after having either found a word or not. We look ahead to the
@@ -41,51 +58,47 @@ module TwitterCldr
           # just found (if there is one), but only if the preceding word does not exceed
           # the threshold. The cursor should now be positioned at the end of the word we
           # found.
-          if cursor.position < end_pos && word_length < root_combine_threshold
+          if cursor.position < end_pos && state.word_length < root_combine_threshold
             # If it is a dictionary word, do nothing. If it isn't, then if there is
             # no preceding word, or the non-word shares less than the minimum threshold
             # of characters with a dictionary word, then scan to resynchronize.
-            preceeding_words = words[words_found].candidates(cursor, dictionary, end_pos)
+            preceeding_words = state.words[state.words_found].candidates(
+              cursor, dictionary, end_pos
+            )
 
-            if preceeding_words <= 0 && (word_length == 0 || words[words_found].longest_prefix < prefix_combine_threshold)
-              chars = advance_to_plausible_word_boundary(cursor, words, current, word_length, end_pos)
-
-              # bump the word count if there wasn't already one
-              words_found += 1 if word_length <= 0
-
-              # update the length with the passed-over characters
-              word_length += chars
+            if preceeding_words <= 0 && (state.word_length == 0 || state.words[state.words_found].longest_prefix < prefix_combine_threshold)
+              advance_to_plausible_word_boundary(cursor, end_pos, state)
             else
               # backup to where we were for next iteration
-              cursor.position = current + word_length
+              cursor.position = state.current + state.word_length
             end
           end
 
           # never stop before a combining mark.
           while cursor.position < end_pos && mark_set.include?(cursor.current)
             cursor.advance
-            word_length += 1
+            state.word_length += 1
           end
 
           # Look ahead for possible suffixes if a dictionary word does not follow.
           # We do this in code rather than using a rule so that the heuristic
           # resynch continues to function. For example, one of the suffix characters
           # could be a typo in the middle of a word.
-          word_length += find_suffix(cursor, words, word_length, end_pos)
+          state.word_length += advance_past_suffix(cursor, end_pos, state)
 
-          # Did we find a word on this iteration? If so, push it on the break stack
-          if word_length > 0
-            boundaries << current + word_length
+          # Did we find a word on this iteration? If so, add it to the list of boundaries.
+          if state.word_length > 0
+            state.boundaries << state.current + state.word_length
           end
         end
 
-        boundaries
+        state.boundaries
       end
 
       private
 
-      def advance_to_plausible_word_boundary(cursor, words, current, word_length, end_pos)
-        remaining = end_pos - (current + word_length)
+      def advance_to_plausible_word_boundary(cursor, end_pos, state)
+        remaining = end_pos - (state.current + state.word_length)
         pc = cursor.current
         chars = 0
 
@@ -99,18 +112,22 @@ module TwitterCldr
 
           if end_word_set.include?(pc) && begin_word_set.include?(uc)
             # Maybe. See if it's in the dictionary.
-            candidate = words[words_found + 1].candidates(cursor, dictionary, end_pos)
-            cursor.position = current + word_length + chars
+            candidate = state.words[state.words_found + 1].candidates(cursor, dictionary, end_pos)
+            cursor.position = state.current + state.word_length + chars
             break if candidate > 0
           end
 
           pc = uc
         end
 
-        chars
+        # bump the word count if there wasn't already one
+        state.words_found += 1 if state.word_length <= 0
+
+        # update the length with the passed-over characters
+        state.word_length += chars
       end
 
-      def mark_best_candidate(cursor, words, words_found, end_pos)
+      def mark_best_candidate(cursor, end_pos, state)
         # if there was more than one, see which one can take us forward the most words
         found_best = false
 
@@ -119,10 +136,10 @@ module TwitterCldr
           loop do
             words_matched = 1
 
-            if words[words_found + 1].candidates(cursor, dictionary, end_pos) > 0
+            if state.words[state.words_found + 1].candidates(cursor, dictionary, end_pos) > 0
               if words_matched < 2
                 # followed by another dictionary word; mark first word as a good candidate
-                words[words_found].mark_current
+                state.words[state.words_found].mark_current
                 words_matched = 2
               end
 
@@ -132,17 +149,17 @@ module TwitterCldr
               # see if any of the possible second words is followed by a third word
               loop do
                 # if we find a third word, stop right away
-                if words[words_found + 2].candidates(cursor, dictionary, end_pos) > 0
-                  words[words_found].mark_current
+                if state.words[state.words_found + 2].candidates(cursor, dictionary, end_pos) > 0
+                  state.words[state.words_found].mark_current
                   found_best = true
                   break
                 end
 
-                break unless words[words_found + 1].back_up(cursor)
+                break unless state.words[state.words_found + 1].back_up(cursor)
               end
             end
 
-            break unless words[words_found].back_up(cursor) && !found_best
+            break unless state.words[state.words_found].back_up(cursor) && !found_best
           end
         end
       end

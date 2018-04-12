@@ -42,7 +42,7 @@ module TwitterCldr
       end
 
       def min_word
-        THAI_MIN_WORD
+        THAI_MIN_WORD_SPAN
       end
 
       def fset
@@ -51,13 +51,13 @@ module TwitterCldr
 
       private
 
-      def find_suffix(cursor, words, word_length, end_pos)
+      def advance_past_suffix(cursor, end_pos, state)
         suffix_length = 0
 
-        if cursor.position < end_pos && word_length > 0
+        if cursor.position < end_pos && state.word_length > 0
           uc = cursor.current
 
-          if words[words_found].candidates(cursor, dictionary, end_pos) <= 0 && suffix_set.include?(uc)
+          if state.words[state.words_found].candidates(cursor, dictionary, end_pos) <= 0 && suffix_set.include?(uc)
             if uc == THAI_PAIYANNOI
               unless suffix_set.include?(cursor.previous)
                 # skip over previous end and PAIYANNOI
@@ -65,7 +65,7 @@ module TwitterCldr
                 suffix_length += 1
                 uc = cursor.current
               else
-                # Restore prior position
+                # restore prior position
                 cursor.advance
               end
             end
@@ -81,7 +81,7 @@ module TwitterCldr
               end
             end
           else
-            cursor.position = current + suffix_length
+            cursor.position = state.current + state.word_length
           end
         end
 
@@ -121,6 +121,10 @@ module TwitterCldr
           set.add(THAI_PAIYANNOI)
           set.add(THAI_MAIYAMOK)
         end
+      end
+
+      def dictionary
+        @dictionary ||= Dictionary.thai
       end
 
     end

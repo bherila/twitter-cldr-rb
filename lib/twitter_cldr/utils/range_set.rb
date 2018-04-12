@@ -160,6 +160,10 @@ module TwitterCldr
         self.class.new(new_ranges)
       end
 
+      def subtract!(range_set)
+        @ranges = subtract(range_set).ranges
+      end
+
       # symmetric difference (the union without the intersection)
       # http://en.wikipedia.org/wiki/Symmetric_difference
       def difference(range_set)
