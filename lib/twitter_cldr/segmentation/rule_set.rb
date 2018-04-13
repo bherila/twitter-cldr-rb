@@ -27,9 +27,8 @@ module TwitterCldr
         )
       end
 
-      def each_boundary(str)
+      def each_boundary(cursor)
         if block_given?
-          cursor = Cursor.new(str)
           last_boundary = 0
 
           # implicit start of text boundary

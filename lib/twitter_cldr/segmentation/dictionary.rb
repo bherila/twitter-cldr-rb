@@ -51,12 +51,12 @@ module TwitterCldr
         @trie = trie
       end
 
-      def matches(codepoints, pos, max_search_length, limit)
-        return 0 if codepoints.empty?
+      def matches(cursor, max_search_length, limit)
+        return 0 if cursor.length == 0
 
         count = 0
         num_chars = 1
-        current = trie.get_node([codepoints[pos]])
+        current = trie.get_node([cursor.current_cp])
         values = []
         lengths = []
 
@@ -69,7 +69,10 @@ module TwitterCldr
 
           break if num_chars >= max_search_length
 
-          current = current.child(codepoints[pos + num_chars])
+          current = current.child(
+            cursor.codepoints[cursor.position + num_chars]
+          )
+
           num_chars += 1
         end
 

@@ -23,7 +23,7 @@ module TwitterCldr
         if start != @offset
           @offset = start
           @count, _, @lengths, @prefix = dictionary.matches(
-            cursor.text, cursor.position, end_pos - start, POSSIBLE_WORD_LIST_MAX
+            cursor, end_pos - start, POSSIBLE_WORD_LIST_MAX
           )
 
           # dictionary leaves text after longest prefix, not longest word, so back up.

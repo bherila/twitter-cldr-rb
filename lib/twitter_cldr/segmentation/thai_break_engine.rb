@@ -4,12 +4,16 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 
 require 'singleton'
+require 'forwardable'
 
 module TwitterCldr
   module Segmentation
     class ThaiBreakEngine
 
       include Singleton
+      extend Forwardable
+
+      def_delegators :engine, :each_boundary, :fset
 
       # ellision character
       THAI_PAIYANNOI = 0x0E2F
@@ -44,7 +48,7 @@ module TwitterCldr
         suffix_length = 0
 
         if cursor.position < end_pos && state.word_length > 0
-          uc = cursor.current
+          uc = cursor.current_cp
 
           if state.words[state.words_found].candidates(cursor, engine.dictionary, end_pos) <= 0 && suffix_set.include?(uc)
             if uc == THAI_PAIYANNOI
@@ -52,7 +56,7 @@ module TwitterCldr
                 # skip over previous end and PAIYANNOI
                 cursor.advance(2)
                 suffix_length += 1
-                uc = cursor.current
+                uc = cursor.current_cp
               else
                 # restore prior position
                 cursor.advance

@@ -7,6 +7,21 @@ module TwitterCldr
   module Segmentation
     class BreakIterator
 
+      class << self
+        # all dictionary characters, i.e. characters that must be handled
+        # by one of the dictionary-based break engines (fyi this takes a
+        # few seconds to compute)
+        def dictionary_set
+          @dictionary_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
+            set.add_set(CjBreakEngine.instance.fset)
+            set.add_set(BurmeseBreakEngine.instance.fset)
+            set.add_set(KhmerBreakEngine.instance.fset)
+            set.add_set(LaoBreakEngine.instance.fset)
+            set.add_set(ThaiBreakEngine.instance.fset)
+          end
+        end
+      end
+
       attr_reader :locale, :options
 
       def initialize(locale = TwitterCldr.locale, options = {})
@@ -16,12 +31,12 @@ module TwitterCldr
 
       def each_sentence(str, &block)
         rule_set = rule_set_for('sentence')
-        each_boundary(rule_set, str, &block)
+        each_boundary(rule_set, get_cursor_for(str), &block)
       end
 
       def each_word(str, &block)
         rule_set = rule_set_for('word')
-        each_boundary(rule_set, str, &block)
+        each_boundary(rule_set, get_cursor_for(str), &block)
       end
 
       def each_grapheme_cluster(str, &block)
@@ -36,9 +51,15 @@ module TwitterCldr
 
       private
 
-      def each_boundary(rule_set, str)
+      def get_cursor_for(str)
+        Cursor.new(
+          TwitterCldr::Normalization.normalize(str, using: :nfkc)
+        )
+      end
+
+      def each_boundary(rule_set, cursor)
         if block_given?
-          rule_set.each_boundary(str).each_cons(2) do |start, stop|
+          rule_set.each_boundary(cursor).each_cons(2) do |start, stop|
             yield str[start...stop], start, stop
           end
         else

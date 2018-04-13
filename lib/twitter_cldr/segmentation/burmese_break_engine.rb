@@ -4,16 +4,16 @@
 # http://www.apache.org/licenses/LICENSE-2.0
 
 require 'singleton'
+require 'forwardable'
 
 module TwitterCldr
   module Segmentation
     class BurmeseBreakEngine
 
       include Singleton
+      extend Forwardable
 
-      def each_boundary(*args, &block)
-        engine.each_boundary(*args, &block)
-      end
+      def_delegators :engine, :each_boundary, :fset
 
       private
 

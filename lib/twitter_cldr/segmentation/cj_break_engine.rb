@@ -3,9 +3,13 @@
 # Copyright 2012 Twitter, Inc
 # http://www.apache.org/licenses/LICENSE-2.0
 
+require 'singleton'
+
 module TwitterCldr
   module Segmentation
     class CjBreakEngine < DictionaryBreakEngine
+
+      include Singleton
 
       # magic number pulled from ICU's source code, presumably slightly longer
       # than the longest Chinese/Japanese/Korean word
@@ -17,8 +21,6 @@ module TwitterCldr
       # the equivalent of Java's Integer.MAX_VALUE
       LARGE_NUMBER = 0xFFFFFFFF
 
-      private
-
       def fset
         @fset ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
           set.apply_pattern('[:Han:]')
@@ -28,6 +30,8 @@ module TwitterCldr
           set.add(0x30FC)  # KATAKANA-HIRAGANA PROLONGED SOUND MARK
         end
       end
+
+      private
 
       def divide_up_dictionary_range(cursor, end_pos)
         best_snlp = Array.new(cursor.length + 1) { LARGE_NUMBER }
@@ -49,7 +53,7 @@ module TwitterCldr
           end
 
           count, values, lengths, _ = dictionary.matches(
-            cursor.text, cursor.position, max_search_length, max_search_length
+            cursor, max_search_length, max_search_length
           )
 
           if count == 0 || lengths[0] != 1
@@ -73,7 +77,7 @@ module TwitterCldr
         t_boundary = []
 
         if best_snlp[cursor.length] == LARGE_NUMBER
-          t_boundary << codepoints.size
+          t_boundary << cursor.length
         else
           idx = cursor.length
 

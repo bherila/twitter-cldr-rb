@@ -25,6 +25,14 @@ module TwitterCldr
         self
       end
 
+      def apply_property(property_name, property_value = nil)
+        set.union!(
+          TwitterCldr::Shared::CodePoint.properties.code_points_for_property(
+            property_name, property_value
+          )
+        )
+      end
+
       def add(codepoint)
         add_range(codepoint..codepoint)
       end

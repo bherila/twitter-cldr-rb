@@ -43,11 +43,11 @@ module TwitterCldr
         @advance_past_suffix = options.fetch(:advance_past_suffix)
       end
 
-      private
-
       def fset
         word_set
       end
+
+      private
 
       def divide_up_dictionary_range(cursor, end_pos)
         return [] if (end_pos - cursor.position) < min_word
@@ -99,7 +99,7 @@ module TwitterCldr
           end
 
           # never stop before a combining mark.
-          while cursor.position < end_pos && mark_set.include?(cursor.current)
+          while cursor.position < end_pos && mark_set.include?(cursor.current_cp)
             cursor.advance
             state.word_length += 1
           end
@@ -125,12 +125,12 @@ module TwitterCldr
 
       def advance_to_plausible_word_boundary(cursor, end_pos, state)
         remaining = end_pos - (state.current + state.word_length)
-        pc = cursor.current
+        pc = cursor.current_cp
         chars = 0
 
         loop do
           cursor.advance
-          uc = cursor.current
+          uc = cursor.current_cp
           chars += 1
           remaining -= 1
 

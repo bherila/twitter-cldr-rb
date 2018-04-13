@@ -7,11 +7,8 @@ module TwitterCldr
   module Segmentation
     class DictionaryBreakEngine
 
-      def each_boundary(text, &block)
-        return to_enum(__method__, text) unless block_given?
-
-        text = TwitterCldr::Normalization.normalize(text, using: :nfkc)
-        cursor = Cursor.new(text.codepoints, start_position: 0)
+      def each_boundary(cursor, &block)
+        return to_enum(__method__, cursor) unless block_given?
 
         last_boundary = 0
         yield 0
@@ -19,7 +16,7 @@ module TwitterCldr
         until cursor.eos?
           stop = cursor.position
 
-          while !cursor.eos? && fset.include?(cursor.text[stop])
+          while !cursor.eos? && fset.include?(cursor.codepoints[stop])
             stop += 1
           end
 
@@ -30,7 +27,7 @@ module TwitterCldr
 
           skip_char_count = 0
 
-          until cursor.eos? || fset.include?(cursor.current)
+          until cursor.eos? || fset.include?(cursor.current_cp)
             cursor.advance
             skip_char_count += 1
           end
@@ -46,13 +43,13 @@ module TwitterCldr
         end
       end
 
-      private
-
-      def divide_up_dictionary_range(*args)
+      def fset(*args)
         raise NotImplementedError, "#{__method__} must be defined in derived classes"
       end
 
-      def fset(*args)
+      private
+
+      def divide_up_dictionary_range(*args)
         raise NotImplementedError, "#{__method__} must be defined in derived classes"
       end
 
