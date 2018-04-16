@@ -21,6 +21,10 @@ module TwitterCldr
       # the equivalent of Java's Integer.MAX_VALUE
       LARGE_NUMBER = 0xFFFFFFFF
 
+      MAX_KATAKANA_LENGTH = 8
+      MAX_KATAKANA_GROUP_LENGTH = 20
+      KATAKANA_COSTS = [8192, 984, 408, 240, 204, 252, 300, 372, 480]
+
       def self.word_set
         @word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
           set.apply_pattern('[:Han:]')
@@ -33,12 +37,17 @@ module TwitterCldr
 
       private
 
+      def word_set
+        self.class.word_set
+      end
+
       def divide_up_dictionary_range(cursor, end_pos)
         best_snlp = Array.new(cursor.length + 1) { LARGE_NUMBER }
         prev = Array.new(cursor.length + 1) { -1 }
 
         best_snlp[0] = 0
         start_pos = cursor.position
+        is_prev_katakana = false
 
         until cursor.eos?
           if best_snlp[cursor.position] == LARGE_NUMBER
@@ -72,6 +81,34 @@ module TwitterCldr
           end
 
           cursor.advance
+
+          # In Japanese, single-character Katakana words are pretty rare.
+          # Accordingly, we apply the following heuristic: any continuous
+          # run of Katakana characters is considered a candidate word with
+          # a default cost specified in the katakanaCost table according
+          # to its length.
+          is_katakana = is_katakana?(cursor.current_cp)
+
+          if !is_prev_katakana && is_katakana
+            j = cursor.position + 1
+            cursor.advance
+
+            while j < cursor.length && (j - cursor.position) < MAX_KATAKANA_GROUP_LENGTH && is_katakana?(cursor.current_cp)
+              cursor.advance
+              j += 1
+            end
+
+            if (j - cursor.position) < MAX_KATAKANA_GROUP_LENGTH
+              new_snlp = best_snlp[cursor.position] + get_katakana_cost(j - cursor.position)
+
+              if new_snlp < best_snlp[j]
+                best_snlp[j] = new_snlp
+                prev[j] = cursor.position
+              end
+            end
+          end
+
+          is_prev_katakana = is_katakana
         end
 
         t_boundary = []
@@ -91,6 +128,15 @@ module TwitterCldr
       end
 
       private
+
+      def is_katakana?(codepoint)
+        (codepoint >= 0x30A1 && codepoint <= 0x30FE && codepoint != 0x30FB) ||
+          (codepoint >= 0xFF66 && codepoint <= 0xFF9F)
+      end
+
+      def get_katakana_cost(word_length)
+        word_length > MAX_KATAKANA_LENGTH ? 8192 : KATAKANA_COSTS[word_length]
+      end
 
       def dictionary
         @dictionary ||= Dictionary.cj

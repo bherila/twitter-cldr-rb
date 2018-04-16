@@ -124,7 +124,8 @@ module TwitterCldr
             yield boundary
           end
 
-          # make sure we're not at the end of the road
+          # make sure we're not at the end of the road after breaking the
+          # latest sequence of non-dictionary characters
           break if cursor.eos?
 
           # find appropriate dictionary-based break engine

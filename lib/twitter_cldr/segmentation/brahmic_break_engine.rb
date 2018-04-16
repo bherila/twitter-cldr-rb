@@ -5,7 +5,8 @@
 
 module TwitterCldr
   module Segmentation
-    # break engine for languages derived from Brahmic script, i.e. Lao, Thai, Khmer, and Burmese
+    # Base class break engine for languages derived from the Brahmic script,
+    # i.e. Lao, Thai, Khmer, and Burmese
     class BrahmicBreakEngine < DictionaryBreakEngine
 
       class EngineState
