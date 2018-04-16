@@ -27,35 +27,27 @@ module TwitterCldr
         )
       end
 
-      def each_boundary(cursor)
-        if block_given?
-          last_boundary = 0
+      def each_boundary(cursor, end_pos)
+        return to_enum(__method__, cursor, end_pos) unless block_given?
 
-          # implicit start of text boundary
-          yield 0
+        last_boundary = cursor.position
 
-          until cursor.eof?
-            match = find_match(cursor)
-            rule = match.rule
+        until cursor.position >= end_pos
+          match = find_match(cursor)
+          rule = match.rule
 
-            if rule.break?
-              yield match.boundary_position
-              last_boundary = match.boundary_position
-            end
-
-            if match.boundary_position == cursor.position
-              cursor.advance
-            else
-              cursor.advance(
-                match.boundary_position - cursor.position
-              )
-            end
+          if rule.break?
+            yield match.boundary_position
+            last_boundary = match.boundary_position
           end
 
-          # implicit end of text boundary
-          yield str.size unless last_boundary == str.size
-        else
-          to_enum(__method__, str)
+          if match.boundary_position == cursor.position
+            cursor.advance
+          else
+            cursor.advance(
+              match.boundary_position - cursor.position
+            )
+          end
         end
       end
 

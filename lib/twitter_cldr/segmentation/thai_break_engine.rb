@@ -13,7 +13,13 @@ module TwitterCldr
       include Singleton
       extend Forwardable
 
-      def_delegators :engine, :each_boundary, :fset
+      def_delegators :engine, :each_boundary
+
+      def self.word_set
+        @word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
+          set.apply_pattern('[[:Thai:]&[:Line_Break=SA:]]')
+        end
+      end
 
       # ellision character
       THAI_PAIYANNOI = 0x0E2F
@@ -33,7 +39,7 @@ module TwitterCldr
           root_combine_threshold: 3,
           prefix_combine_threshold: 3,
           min_word: 4,
-          word_set: thai_word_set,
+          word_set: self.class.word_set,
           mark_set: mark_set,
           end_word_set: end_word_set,
           begin_word_set: begin_word_set,
@@ -81,12 +87,6 @@ module TwitterCldr
         suffix_length
       end
 
-      def thai_word_set
-        @thai_word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-          set.apply_pattern('[[:Thai:]&[:Line_Break=SA:]]')
-        end
-      end
-
       def mark_set
         @mark_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
           set.apply_pattern('[[:Thai:]&[:Line_Break=SA:]&[:M:]]')
@@ -96,7 +96,7 @@ module TwitterCldr
 
       def end_word_set
         @end_word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-          set.add_set(thai_word_set)
+          set.add_set(self.class.word_set)
           set.subtract(0x0E31)  # MAI HAN-AKAT
           set.subtract_range(0x0E40..0x0E44)  # SARA E through SARA AI MAIMALAI
         end

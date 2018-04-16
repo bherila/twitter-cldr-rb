@@ -43,10 +43,6 @@ module TwitterCldr
         @advance_past_suffix = options.fetch(:advance_past_suffix)
       end
 
-      def fset
-        word_set
-      end
-
       private
 
       def divide_up_dictionary_range(cursor, end_pos)

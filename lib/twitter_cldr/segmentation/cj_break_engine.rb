@@ -21,8 +21,8 @@ module TwitterCldr
       # the equivalent of Java's Integer.MAX_VALUE
       LARGE_NUMBER = 0xFFFFFFFF
 
-      def fset
-        @fset ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
+      def self.word_set
+        @word_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
           set.apply_pattern('[:Han:]')
           set.apply_pattern('[[:Katakana:]\uff9e\uff9f]')
           set.apply_pattern('[:Hiragana:]')

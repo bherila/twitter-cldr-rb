@@ -23,5 +23,6 @@ module TwitterCldr
     autoload :RuleSet,               'twitter_cldr/segmentation/rule_set'
     autoload :RuleSetBuilder,        'twitter_cldr/segmentation/rule_set_builder'
     autoload :ThaiBreakEngine,       'twitter_cldr/segmentation/thai_break_engine'
+    autoload :UnhandledBreakEngine,  'twitter_cldr/segmentation/unhandled_break_engine'
   end
 end

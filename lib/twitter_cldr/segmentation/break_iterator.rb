@@ -5,20 +5,43 @@
 
 module TwitterCldr
   module Segmentation
+    class NonNormalizedStringError < StandardError; end
+
     class BreakIterator
+
+      DICTIONARY_BREAK_ENGINES = [
+        CjBreakEngine,
+        BurmeseBreakEngine,
+        KhmerBreakEngine,
+        LaoBreakEngine,
+        ThaiBreakEngine
+      ]
 
       class << self
         # all dictionary characters, i.e. characters that must be handled
-        # by one of the dictionary-based break engines (fyi this takes a
-        # few seconds to compute)
+        # by one of the dictionary-based break engines
         def dictionary_set
           @dictionary_set ||= TwitterCldr::Shared::UnicodeSet.new.tap do |set|
-            set.add_set(CjBreakEngine.instance.fset)
-            set.add_set(BurmeseBreakEngine.instance.fset)
-            set.add_set(KhmerBreakEngine.instance.fset)
-            set.add_set(LaoBreakEngine.instance.fset)
-            set.add_set(ThaiBreakEngine.instance.fset)
+            DICTIONARY_BREAK_ENGINES.each do |break_engine|
+              set.add_set(break_engine.word_set)
+            end
           end
+        end
+
+        def break_engine_for(codepoint)
+          codepoint_to_engine_cache[codepoint] ||= begin
+            engine = DICTIONARY_BREAK_ENGINES.find do |break_engine|
+              break_engine.word_set.include?(codepoint)
+            end
+
+            engine || UnhandledBreakEngine.instance
+          end
+        end
+
+        private
+
+        def codepoint_to_engine_cache
+          @codepoint_to_engine_cache ||= {}
         end
       end
 
@@ -34,9 +57,17 @@ module TwitterCldr
         each_boundary(rule_set, get_cursor_for(str), &block)
       end
 
-      def each_word(str, &block)
-        rule_set = rule_set_for('word')
-        each_boundary(rule_set, get_cursor_for(str), &block)
+      def each_word(str)
+        unless TwitterCldr::Normalization.normalized?(str, using: :nfkc)
+          raise NonNormalizedStringError, 'string must be normalized using the NFKC '\
+            'normalization form in order for the segmentation engine to function correctly'
+        end
+
+        return to_enum(__method__, str) unless block_given?
+
+        each_word_boundary(str).each_cons(2) do |start, stop|
+          yield str[start...stop], start, stop
+        end
       end
 
       def each_grapheme_cluster(str, &block)
@@ -51,10 +82,12 @@ module TwitterCldr
 
       private
 
+      def is_dictionary_cp?(codepoint)
+        self.class.dictionary_set.include?(codepoint)
+      end
+
       def get_cursor_for(str)
-        Cursor.new(
-          TwitterCldr::Normalization.normalize(str, using: :nfkc)
-        )
+        Cursor.new(str)
       end
 
       def each_boundary(rule_set, cursor)
@@ -65,6 +98,47 @@ module TwitterCldr
         else
           to_enum(__method__, rule_set, str)
         end
+      end
+
+      def each_word_boundary(str, &block)
+        return to_enum(__method__, str) unless block_given?
+
+        rule_set = rule_set_for('word')
+        cursor = get_cursor_for(str)
+
+        # implicit start of text boundary
+        last_boundary = 0
+        yield 0
+
+        until cursor.eos?
+          stop = cursor.position
+
+          # loop until we find a dictionary character
+          until stop >= cursor.length || is_dictionary_cp?(cursor.codepoints[stop])
+            stop += 1
+          end
+
+          # break with normal, regex-based rule set
+          rule_set.each_boundary(cursor, stop) do |boundary|
+            last_boundary = boundary
+            yield boundary
+          end
+
+          # make sure we're not at the end of the road
+          break if cursor.eos?
+
+          # find appropriate dictionary-based break engine
+          break_engine = self.class.break_engine_for(cursor.current_cp)
+
+          # break using dictionary-based engine
+          break_engine.instance.each_boundary(cursor) do |boundary|
+            last_boundary = boundary
+            yield boundary
+          end
+        end
+
+        # implicit end of text boundary
+        yield cursor.length if last_boundary != cursor.length
       end
 
       def rule_set_for(boundary_type)
