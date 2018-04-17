@@ -42,23 +42,26 @@ module TwitterCldr
       end
 
       def divide_up_dictionary_range(cursor, end_pos)
-        best_snlp = Array.new(cursor.length + 1) { LARGE_NUMBER }
-        prev = Array.new(cursor.length + 1) { -1 }
+        input_length = end_pos - cursor.position
+        best_snlp = Array.new(input_length + 1) { LARGE_NUMBER }
+        prev = Array.new(input_length + 1) { -1 }
 
         best_snlp[0] = 0
         start_pos = cursor.position
         is_prev_katakana = false
 
-        until cursor.eos?
-          if best_snlp[cursor.position] == LARGE_NUMBER
+        until cursor.position >= end_pos
+          idx = cursor.position - start_pos
+
+          if best_snlp[idx] == LARGE_NUMBER
             cursor.advance
             next
           end
 
-          max_search_length = if cursor.position + MAX_WORD_SIZE < cursor.length
+          max_search_length = if cursor.position + MAX_WORD_SIZE < end_pos
             MAX_WORD_SIZE
           else
-            cursor.length - cursor.position
+            end_pos - cursor.position
           end
 
           count, values, lengths, _ = dictionary.matches(
@@ -72,11 +75,11 @@ module TwitterCldr
           end
 
           count.times do |j|
-            new_snlp = best_snlp[cursor.position] + values[j]
+            new_snlp = best_snlp[idx] + values[j]
 
-            if new_snlp < best_snlp[lengths[j] + cursor.position]
-              best_snlp[lengths[j] + cursor.position] = new_snlp
-              prev[lengths[j] + cursor.position] = cursor.position
+            if new_snlp < best_snlp[lengths[j] + idx]
+              best_snlp[lengths[j] + idx] = new_snlp
+              prev[lengths[j] + idx] = idx
             end
           end
 
@@ -93,17 +96,17 @@ module TwitterCldr
             j = cursor.position + 1
             cursor.advance
 
-            while j < cursor.length && (j - cursor.position) < MAX_KATAKANA_GROUP_LENGTH && is_katakana?(cursor.current_cp)
+            while j < end_pos && (j - idx) < MAX_KATAKANA_GROUP_LENGTH && is_katakana?(cursor.current_cp)
               cursor.advance
               j += 1
             end
 
-            if (j - cursor.position) < MAX_KATAKANA_GROUP_LENGTH
-              new_snlp = best_snlp[cursor.position] + get_katakana_cost(j - cursor.position)
+            if (j - idx) < MAX_KATAKANA_GROUP_LENGTH
+              new_snlp = best_snlp[idx] + get_katakana_cost(j - idx)
 
               if new_snlp < best_snlp[j]
                 best_snlp[j] = new_snlp
-                prev[j] = cursor.position
+                prev[j] = idx
               end
             end
           end
@@ -113,13 +116,13 @@ module TwitterCldr
 
         t_boundary = []
 
-        if best_snlp[cursor.length] == LARGE_NUMBER
-          t_boundary << cursor.length
+        if best_snlp[input_length] == LARGE_NUMBER
+          t_boundary << end_pos
         else
-          idx = cursor.length
+          idx = end_pos - start_pos
 
           while idx > 0
-            t_boundary << idx
+            t_boundary << idx + start_pos
             idx = prev[idx]
           end
         end

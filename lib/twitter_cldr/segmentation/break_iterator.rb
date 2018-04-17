@@ -119,9 +119,11 @@ module TwitterCldr
           end
 
           # break with normal, regex-based rule set
-          rule_set.each_boundary(cursor, stop) do |boundary|
-            last_boundary = boundary
-            yield boundary
+          if stop > cursor.position
+            rule_set.each_boundary(cursor, stop) do |boundary|
+              last_boundary = boundary
+              yield boundary
+            end
           end
 
           # make sure we're not at the end of the road after breaking the
