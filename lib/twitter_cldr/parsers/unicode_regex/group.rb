@@ -26,7 +26,7 @@ module TwitterCldr
             str << '?:' unless capturing?
             elements.each { |element| str << element.to_regexp_str }
             str << ')'
-            str << (quantifier || '')
+            str << quantifier.to_s
           end
         end
 

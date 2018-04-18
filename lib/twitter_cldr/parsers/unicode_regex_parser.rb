@@ -16,6 +16,7 @@ module TwitterCldr
       autoload :CharacterSet,   'twitter_cldr/parsers/unicode_regex/character_set'
       autoload :Group,          'twitter_cldr/parsers/unicode_regex/group'
       autoload :Literal,        'twitter_cldr/parsers/unicode_regex/literal'
+      autoload :Quantifier,     'twitter_cldr/parsers/unicode_regex/quantifier'
       autoload :UnicodeString,  'twitter_cldr/parsers/unicode_regex/unicode_string'
 
       def parse(tokens, options = {})
@@ -166,7 +167,9 @@ module TwitterCldr
       def quantifier(token)
         case token.type
           when :static_quantifier, :ranged_quantifier
-            token.value.tap { next_token(token.type) }
+            Quantifier.from(token.value).tap do
+              next_token(token.type)
+            end
         end
       end
 

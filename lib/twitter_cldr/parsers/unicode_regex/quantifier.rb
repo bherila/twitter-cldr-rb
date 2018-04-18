@@ -1,0 +1,54 @@
+# encoding: UTF-8
+
+# Copyright 2012 Twitter, Inc
+# http://www.apache.org/licenses/LICENSE-2.0
+
+module TwitterCldr
+  module Parsers
+    class UnicodeRegexParser
+
+      class Quantifier
+        class << self
+          def from(text)
+            case text
+              when '*' then any
+              when '+' then at_least_one
+              else
+                min, max = text.gsub(/[{}]/, '').split(',')
+                min = min.to_i
+                max = max ? max.to_i : Float::INFINITY
+                new(min, max, text)
+            end
+          end
+
+          def blank
+            @blank = new(0, 0, '')
+          end
+
+          private
+
+          def any
+            @any ||= new(0, Float::INFINITY, '*')
+          end
+
+          def at_least_one
+            @at_least_one ||= new(1, Float::INFINITY, '+')
+          end
+        end
+
+        attr_reader :min, :max
+
+        def initialize(min, max, str)
+          @min = min
+          @max = max
+          @str = str
+        end
+
+        def to_s
+          @str
+        end
+      end
+
+    end
+  end
+end

@@ -8,7 +8,11 @@ module TwitterCldr
     class UnicodeRegexParser
       class Component
 
-        attr_accessor :quantifier
+        attr_writer :quantifier
+
+        def quantifier
+          @quantifier ||= Quantifier.blank
+        end
 
         protected
 
