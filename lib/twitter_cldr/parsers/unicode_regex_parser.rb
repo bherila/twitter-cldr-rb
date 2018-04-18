@@ -10,12 +10,13 @@ module TwitterCldr
 
     class UnicodeRegexParser < Parser
 
-      autoload :Component,      "twitter_cldr/parsers/unicode_regex/component"
-      autoload :CharacterClass, "twitter_cldr/parsers/unicode_regex/character_class"
-      autoload :CharacterRange, "twitter_cldr/parsers/unicode_regex/character_range"
-      autoload :CharacterSet,   "twitter_cldr/parsers/unicode_regex/character_set"
-      autoload :Literal,        "twitter_cldr/parsers/unicode_regex/literal"
-      autoload :UnicodeString,  "twitter_cldr/parsers/unicode_regex/unicode_string"
+      autoload :Component,      'twitter_cldr/parsers/unicode_regex/component'
+      autoload :CharacterClass, 'twitter_cldr/parsers/unicode_regex/character_class'
+      autoload :CharacterRange, 'twitter_cldr/parsers/unicode_regex/character_range'
+      autoload :CharacterSet,   'twitter_cldr/parsers/unicode_regex/character_set'
+      autoload :Group,          'twitter_cldr/parsers/unicode_regex/group'
+      autoload :Literal,        'twitter_cldr/parsers/unicode_regex/literal'
+      autoload :UnicodeString,  'twitter_cldr/parsers/unicode_regex/unicode_string'
 
       def parse(tokens, options = {})
         super(
@@ -33,8 +34,10 @@ module TwitterCldr
         :multichar_string, :string, :escaped_character, :character_range
       ]
 
+      # these things can all exist as literals inside character classes
       CHARACTER_CLASS_TOKEN_TYPES = RANGED_CHARACTER_CLASS_TOKEN_TYPES + [
-        :open_bracket, :special_char
+        :open_bracket, :special_char, :group_start, :group_end,
+        :non_capturing, :static_quantifier, :ranged_quantifier
       ]
 
       NEGATED_TOKEN_TYPES = [
@@ -129,21 +132,46 @@ module TwitterCldr
       end
 
       def do_parse(options)
-        elements = []
-
-        while current_token
-          case current_token.type
-            when :open_bracket
-              elements << character_class
-            when :union
-              next_token(:union)
-            else
-              elements << send(current_token.type, current_token)
-              next_token(current_token.type)
+        [].tap do |list|
+          while current_token
+            if next_elem = element(list.last)
+              list << next_elem
+            end
           end
         end
+      end
 
-        elements
+      def element(last_element = nil)
+        element = case current_token.type
+          when :open_bracket
+            character_class
+          when :union
+            next_token(:union)
+            nil
+          when :group_start
+            group(current_token)
+          when :static_quantifier, :ranged_quantifier
+            # handle this below
+          else
+            unhandled(current_token)
+        end
+
+        if last_element && current_token
+          last_element.quantifier = quantifier(current_token)
+        end
+
+        element
+      end
+
+      def quantifier(token)
+        case token.type
+          when :static_quantifier, :ranged_quantifier
+            token.value.tap { next_token(token.type) }
+        end
+      end
+
+      def unhandled(token)
+        send(token.type, token).tap { next_token(token.type) }
       end
 
       def character_set(token)
@@ -176,12 +204,40 @@ module TwitterCldr
         )
       end
 
-      def escaped_character(token)
+      def literal(token)
         Literal.new(token.value)
       end
 
-      def special_char(token)
-        Literal.new(token.value)
+      alias :escaped_character :literal
+      alias :special_char :literal
+
+      # called if currently parsing a character class, otherwise handled
+      # in `group' and `quantifier' methods
+      alias :group_start :literal
+      alias :group_end :literal
+      alias :non_capturing :literal
+      alias :static_quantifier :literal
+      alias :ranged_quantifier :literal
+
+      def group(token)
+        Group.new.tap do |g|
+          next_token(:group_start)
+
+          if current_token.type == :non_capturing
+            g.capturing = false
+            next_token(:non_capturing)
+          else
+            g.capturing = true
+          end
+
+          until current_token.type == :group_end
+            if next_elem = element(g.elements.last)
+              g.elements << next_elem
+            end
+          end
+
+          next_token(:group_end)
+        end
       end
 
       alias :negate :special_char

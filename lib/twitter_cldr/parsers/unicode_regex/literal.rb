@@ -35,7 +35,7 @@ module TwitterCldr
         end
 
         def to_regexp_str
-          text
+          text + (quantifier || '')
         end
 
         def to_set

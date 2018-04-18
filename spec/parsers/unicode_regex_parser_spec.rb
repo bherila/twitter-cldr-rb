@@ -73,14 +73,10 @@ describe UnicodeRegexParser do
     end
 
     it "handles special chars" do
-      elements = parse(tokenize("^(?:)$"))
+      elements = parse(tokenize("^$"))
       elements.each { |elem| expect(elem).to be_a(UnicodeRegexParser::Literal) }
       expect(elements[0].text).to eq("^")
-      expect(elements[1].text).to eq("(")
-      expect(elements[2].text).to eq("?")
-      expect(elements[3].text).to eq(":")
-      expect(elements[4].text).to eq(")")
-      expect(elements[5].text).to eq("$")
+      expect(elements[1].text).to eq("$")
     end
   end
 end

@@ -31,7 +31,7 @@ module TwitterCldr
         end
 
         def to_regexp_str
-          array_to_regex(Array(codepoints))
+          array_to_regex(Array(codepoints)) + (quantifier || '')
         end
 
         def to_s

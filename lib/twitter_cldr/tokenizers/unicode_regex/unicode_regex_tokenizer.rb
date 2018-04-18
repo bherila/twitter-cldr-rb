@@ -32,8 +32,16 @@ module TwitterCldr
             TokenRecognizer.new(:pipe, /\|/),
             TokenRecognizer.new(:dash, /-/),
 
+            TokenRecognizer.new(:group_start, /\(/),
+            TokenRecognizer.new(:non_capturing, /\?:/),
+            TokenRecognizer.new(:group_end, /\)/),
+
+            # quantifiers
+            TokenRecognizer.new(:static_quantifier, /[?*+]+/),
+            TokenRecognizer.new(:ranged_quantifier, /\{\d,?\d?\}/),
+
             # stuff that shouldn't be converted to codepoints
-            TokenRecognizer.new(:special_char, /\{\d,?\d?\}|[$?:{}()*+\.,\/\\]/),
+            TokenRecognizer.new(:special_char, /[$:(){}\.,\/\\]/),
 
             TokenRecognizer.new(:open_bracket, /\[/),
             TokenRecognizer.new(:close_bracket, /\]/),

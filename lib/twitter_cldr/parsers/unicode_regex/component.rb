@@ -8,6 +8,8 @@ module TwitterCldr
     class UnicodeRegexParser
       class Component
 
+        attr_accessor :quantifier
+
         protected
 
         def to_utf8(codepoints)
