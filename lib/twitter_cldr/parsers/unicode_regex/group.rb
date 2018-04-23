@@ -15,7 +15,7 @@ module TwitterCldr
         end
 
         def to_set
-          TwitterCldr::Utils::RangeSet.new.tap do |set|
+          TwitterCldr::Utils::RangeSet.new([]).tap do |set|
             elements.each { |element| set.union!(element.to_set) }
           end
         end

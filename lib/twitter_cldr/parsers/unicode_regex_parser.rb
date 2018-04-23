@@ -135,15 +135,15 @@ module TwitterCldr
       def do_parse(options)
         [].tap do |list|
           while current_token
-            if next_elem = element(list.last)
+            if next_elem = element
               list << next_elem
             end
           end
         end
       end
 
-      def element(last_element = nil)
-        element = case current_token.type
+      def element
+        elem = case current_token.type
           when :open_bracket
             character_class
           when :union
@@ -151,17 +151,15 @@ module TwitterCldr
             nil
           when :group_start
             group(current_token)
-          when :static_quantifier, :ranged_quantifier
-            # handle this below
           else
             unhandled(current_token)
         end
 
-        if last_element && current_token
-          last_element.quantifier = quantifier(current_token)
+        if elem && current_token
+          elem.quantifier = quantifier(current_token)
         end
 
-        element
+        elem
       end
 
       def quantifier(token)
@@ -234,7 +232,7 @@ module TwitterCldr
           end
 
           until current_token.type == :group_end
-            if next_elem = element(g.elements.last)
+            if next_elem = element
               g.elements << next_elem
             end
           end

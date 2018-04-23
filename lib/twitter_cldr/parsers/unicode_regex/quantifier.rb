@@ -22,7 +22,7 @@ module TwitterCldr
           end
 
           def blank
-            @blank = new(0, 0, '')
+            @blank = new(1, 1, '')
           end
 
           private
@@ -46,6 +46,14 @@ module TwitterCldr
 
         def to_s
           @str
+        end
+
+        def blank?
+          max == 1 && min == 1
+        end
+
+        def in_bounds?(value)
+          value >= min && value <= max
         end
       end
 
