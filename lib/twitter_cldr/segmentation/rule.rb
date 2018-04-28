@@ -5,53 +5,47 @@
 
 module TwitterCldr
   module Segmentation
-    RuleMatchData = Struct.new(
-      :rule, :boundary_offset, :boundary_position
-    )
 
     class Rule
+      attr_reader :left, :right, :id
 
-      attr_reader :left, :right
-      attr_accessor :string, :id
-
-      def initialize(left, right)
+      def initialize(left, right, id)
+        @index = 0
         @left = left
         @right = right
+        @id = id
       end
 
-      def match(cursor)
-        left_match = match_side(left, cursor.text, cursor.position)
-        return nil unless left_match
-        left_match_offset = offset(left_match, cursor.position)
+      def accept(codepoint)
+        if @left.satisfied? && @right.can_accept?(codepoint)
+          @index += 1
+        end
 
-        right_match = match_side(right, cursor.text, left_match_offset.last)
-        return nil unless right_match
-        right_match_offset = offset(right_match, left_match_offset.last)
+        current.accept(codepoint)
+      end
 
-        offset = [left_match_offset.first, right_match_offset.last]
-        position = left_match_offset.last
+      def terminal?
+        @index > 0
+      end
 
-        RuleMatchData.new(self, offset, position)
+      def satisfied?
+        @right.satisfied?
+      end
+
+      def reset
+        @index = 0
+        @left.reset
+        @right.reset
+      end
+
+      def id
+        @rule.id
       end
 
       private
 
-      def offset(match, default)
-        if match
-          match.offset(0)
-        else
-          [default, default]
-        end
-      end
-
-      def match_side(side, text, position)
-        if side
-          side_match = side.match(text, position)
-
-          if side_match && side_match.begin(0) == position
-            side_match
-          end
-        end
+      def current
+        terminal? ? @right : @left
       end
     end
 
@@ -61,7 +55,11 @@ module TwitterCldr
       end
 
       def break?
-        true
+        terminal? && satisfied?
+      end
+
+      def no_break?
+        false
       end
     end
 
@@ -72,6 +70,10 @@ module TwitterCldr
 
       def break?
         false
+      end
+
+      def no_break?
+        terminal? && satisfied?
       end
     end
 

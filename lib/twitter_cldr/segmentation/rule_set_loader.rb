@@ -5,12 +5,28 @@
 
 module TwitterCldr
   module Segmentation
-    class RuleSetBuilder
+
+    LoadedRule = Struct.new(:boundary_symbol, :left, :right, :id, :string) do
+      def to_rule
+        klass = case boundary_symbol
+          when :break then BreakRule
+          when :no_break then NoBreakRule
+        end
+
+        klass.new(State.new(left), State.new(right), id)
+      end
+    end
+
+    class RuleSetLoader
 
       class << self
-        def load(locale, boundary_type, options = {})
-          rules = compile_rules_for(boundary_type)
-          RuleSet.new(locale, rules, boundary_type, options)
+        def load(locale, boundary_type)
+          rule_cache[boundary_type] ||= begin
+            boundary_name = boundary_name_for(boundary_type)
+            boundary_data = resource_for(boundary_name)
+            symbol_table = symbol_table_for(boundary_data)
+            rules_for(boundary_data, symbol_table)
+          end
         end
 
         # See the comment above exceptions_for. Basically, we only support exceptions
@@ -25,23 +41,6 @@ module TwitterCldr
               rule.id = 0
             end
           end
-        end
-
-        # The implicit final rule is always "Any ÷ Any"
-        def implicit_final_rule
-          @implicit_final_rule ||=
-            parse('. ÷ .', nil).tap do |rule|
-              rule.id = 9999
-            end
-        end
-
-        # The implicit initial rules are always "start-of-text ÷"
-        # and "÷ end-of-text". We don't need the start-of-text one.
-        def implicit_end_of_text_rule
-          @implicit_end_of_text_rule ||=
-            parse('.\z ÷', nil).tap do |rule|
-              rule.id = 9998
-            end
         end
 
         private
@@ -61,16 +60,6 @@ module TwitterCldr
 
         def boundary_name_for(str)
           str.gsub(/(?:^|\_)([A-Za-z])/) { |s| $1.upcase } + 'Break'
-        end
-
-        # tokenizes and parses rules from segment_root
-        def compile_rules_for(boundary_type)
-          rule_cache[boundary_type] ||= begin
-            boundary_name = boundary_name_for(boundary_type)
-            boundary_data = resource_for(boundary_name)
-            symbol_table = symbol_table_for(boundary_data)
-            rules_for(boundary_data, symbol_table)
-          end
         end
 
         def symbol_table_for(boundary_data)
@@ -96,11 +85,10 @@ module TwitterCldr
         end
 
         def rules_for(boundary_data, symbol_table)
-          boundary_data[:rules].map do |rule|
-            r = parse(rule[:value], symbol_table)
-            r.string = rule[:value]
-            r.id = rule[:id]
-            r
+          boundary_data[:rules].map do |data|
+            LoadedRule.new(
+              *parse(data[:value], symbol_table), data[:id], data[:string]
+            )
           end
         end
 

@@ -12,8 +12,7 @@ module TwitterCldr
         boundary_symbol = boundary_symbol_for(boundary_symbol_str)
         left = compile_token_list(tokenize_regex(left_str || ''), options)
         right = compile_token_list(tokenize_regex(right_str || ''), options)
-        klass = class_for(boundary_symbol)
-        klass.new(left, right)
+        [boundary_symbol, left, right]
       end
 
       def tokenize_regex(text)
@@ -28,15 +27,6 @@ module TwitterCldr
         case str
           when '÷' then :break
           when '×' then :no_break
-        end
-      end
-
-      def class_for(boundary_symbol)
-        case boundary_symbol
-          when :break
-            BreakRule
-          when :no_break
-            NoBreakRule
         end
       end
 
