@@ -113,7 +113,11 @@ module TwitterCldr
       end
 
       def set
-        @set ||= begin
+        @set ||= if @element.respond_to?(:text)
+          if @element.text == '.'
+            TwitterCldr::Utils::RangeSet.new([0..0x10FFFF])
+          end
+        else
           range_set = @element.to_set
 
           if range_set.size > 30_000

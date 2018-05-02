@@ -60,6 +60,7 @@ module TwitterCldr
 
       def each_rule(&block)
         return to_enum(__method__) unless block_given?
+        # @TODO: handle ULI exceptions
         # yield exception_rule if use_uli_exceptions? && supports_exceptions?
         rule_set.each(&block)
       end
