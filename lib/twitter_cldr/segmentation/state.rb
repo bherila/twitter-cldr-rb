@@ -7,6 +7,17 @@ module TwitterCldr
   module Segmentation
 
     class State
+      def self.wrap(element)
+        case element
+          when TwitterCldr::Parsers::UnicodeRegexParser::Alternation
+            AlternationState.new(element)
+          else
+            # don't use a bare 'new' here since self.wrap is also inherited
+            # by derived classes
+            State.new(element)
+        end
+      end
+
       attr_reader :num_accepted
 
       def initialize(element)
@@ -14,9 +25,11 @@ module TwitterCldr
         @quantifier_min = quantifier.min
         @quantifier_max = quantifier.max
 
-        @children = if element.respond_to?(:elements)
-          element.elements.map { |elem| self.class.new(elem) }
+        @children = if element.respond_to?(:each)
+          element.map { |elem| self.class.wrap(elem) }
         end
+
+        @children = nil if @children.empty?
 
         reset
       end

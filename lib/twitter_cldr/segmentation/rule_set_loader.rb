@@ -13,7 +13,7 @@ module TwitterCldr
           when :no_break then NoBreakRule
         end
 
-        klass.new(State.new(left), State.new(right), id)
+        klass.new(State.wrap(left), State.wrap(right), id)
       end
     end
 

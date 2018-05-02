@@ -28,7 +28,7 @@ module TwitterCldr
           end
         end
 
-        def break_engine_for(codepoint)
+        def dictionary_break_engine_for(codepoint)
           codepoint_to_engine_cache[codepoint] ||= begin
             engine = DICTIONARY_BREAK_ENGINES.find do |break_engine|
               break_engine.word_set.include?(codepoint)
@@ -53,8 +53,8 @@ module TwitterCldr
       end
 
       def each_sentence(str, &block)
-        rule_set = rule_set_for('sentence')
-        each_boundary(rule_set, get_cursor_for(str), &block)
+        rule_break_engine = rule_break_engine_for('sentence')
+        each_boundary(rule_break_engine, get_cursor_for(str), &block)
       end
 
       def each_word(str)
@@ -91,19 +91,17 @@ module TwitterCldr
       end
 
       def each_boundary(rule_set, cursor)
-        if block_given?
-          rule_set.each_boundary(cursor).each_cons(2) do |start, stop|
-            yield str[start...stop], start, stop
-          end
-        else
-          to_enum(__method__, rule_set, str)
+        return to_enum(__method__, rule_set, cursor) unless block_given?
+
+        rule_set.each_boundary(cursor).each_cons(2) do |start, stop|
+          yield cursor.text[start...stop], start, stop
         end
       end
 
       def each_word_boundary(str, &block)
         return to_enum(__method__, str) unless block_given?
 
-        rule_set = rule_set_for('word')
+        rule_break_engine = rule_break_engine_for('word')
         cursor = get_cursor_for(str)
 
         # implicit start of text boundary
@@ -118,9 +116,9 @@ module TwitterCldr
             stop += 1
           end
 
-          # break with normal, regex-based rule set
+          # break with normal, state-based break engine
           if stop > cursor.position
-            rule_set.each_boundary(cursor, stop) do |boundary|
+            rule_break_engine.each_boundary(cursor, stop) do |boundary|
               last_boundary = boundary
               yield boundary
             end
@@ -131,7 +129,7 @@ module TwitterCldr
           break if cursor.eos?
 
           # find appropriate dictionary-based break engine
-          break_engine = self.class.break_engine_for(cursor.current_cp)
+          break_engine = self.class.dictionary_break_engine_for(cursor.current_cp)
 
           # break using dictionary-based engine
           break_engine.instance.each_boundary(cursor) do |boundary|
@@ -144,8 +142,16 @@ module TwitterCldr
         yield cursor.length if last_boundary != cursor.length
       end
 
-      def rule_set_for(boundary_type)
-        RuleSet.load(locale, boundary_type, options)
+      # Unfortunately these cannot be shared between threads because they are state-based.
+      # Users should create individual instances of the BreakIterator class for each thread.
+      def rule_break_engine_for(boundary_type)
+        rule_break_engine_cache[boundary_type] ||= RuleBasedBreakEngine.create(
+          locale, boundary_type, options
+        )
+      end
+
+      def rule_break_engine_cache
+        @rule_break_engine_cache ||= {}
       end
     end
   end

@@ -53,6 +53,8 @@ module TwitterCldr
       def_delegator :to_regexp, :match
       def_delegator :to_regexp, :=~
 
+      include Enumerable
+
       attr_reader :elements, :modifiers
 
       def initialize(elements, modifiers = nil)
@@ -72,6 +74,10 @@ module TwitterCldr
         @elements.inject('') do |ret, element|
           ret + element.to_s
         end
+      end
+
+      def each(&block)
+        @elements.each(&block)
       end
 
       private

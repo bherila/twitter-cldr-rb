@@ -65,7 +65,7 @@ END
         test_parts = parse(test)
         test_case_boundaries = boundaries(test_parts)
         test_case_string = string(test_parts)
-        result_boundaries = rule_set.each_boundary(test_case_string).to_a
+        result_boundaries = rule_set.each_boundary(Segmentation::Cursor.new(test_case_string)).to_a
         expect(result_boundaries).to(
           eq(test_case_boundaries), error_message(
             test, test_case_boundaries, result_boundaries

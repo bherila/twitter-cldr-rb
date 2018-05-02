@@ -7,10 +7,8 @@ module TwitterCldr
   module Segmentation
 
     class RuleBasedBreakEngine
-      attr_reader :locale, :rule_set
-      attr_accessor :use_uli_exceptions
-
-      alias_method :use_uli_exceptions?, :use_uli_exceptions
+      attr_reader :locale, :rule_set, :use_uli_exceptions
+      alias :use_uli_exceptions? :use_uli_exceptions
 
       def self.create(locale, boundary_type, options = {})
         new(locale, RuleSetLoader.load(locale, boundary_type), options)
@@ -21,10 +19,12 @@ module TwitterCldr
 
         @rule_set = rule_set.map { |loaded_rule| loaded_rule.to_rule }
         @rule_set << BreakRule.new(
-          State.new(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
-          State.new(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
+          State.wrap(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
+          State.wrap(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
           :implicit_break
         )
+
+        @implicit_final_rule = BreakRule.new(nil, nil, :implicit_final)
 
         @use_uli_exceptions = options.fetch(
           :use_uli_exceptions, false
@@ -34,7 +34,6 @@ module TwitterCldr
       def each_boundary(cursor, end_pos = cursor.length)
         return to_enum(__method__, cursor, end_pos) unless block_given?
 
-        yield 0
         last_boundary = cursor.position
 
         until cursor.position >= end_pos
@@ -60,19 +59,9 @@ module TwitterCldr
       private
 
       def each_rule(&block)
-        if block_given?
-          if use_uli_exceptions? && supports_exceptions?
-            yield exception_rule
-          end
-
-          rules.each(&block)
-        else
-          to_enum(__method__)
-        end
-      end
-
-      def implicit_final_rule
-        @implicit_final_rule ||= BreakRule.new(nil, nil, :implicit_final)
+        return to_enum(__method__) unless block_given?
+        yield exception_rule if use_uli_exceptions? && supports_exceptions?
+        rule_set.each(&block)
       end
 
       def exception_rule
@@ -86,19 +75,24 @@ module TwitterCldr
       end
 
       def find_match(cursor)
-        rule_set.each do |rule|
-          counter = cursor.position
+        each_rule do |rule|
+          begin
+            counter = cursor.position
 
-          while counter < cursor.length && rule.accept(cursor.codepoints[counter])
-            if rule.satisfied? && rule.terminal?
-              return [rule, cursor.position + rule.left.num_accepted]
+            binding.pry if rule.id == 5
+            while counter < cursor.length && rule.accept(cursor.codepoints[counter])
+              if rule.satisfied? && rule.terminal?
+                return [rule, cursor.position + rule.left.num_accepted]
+              end
+
+              counter += 1
             end
 
-            counter += 1
-          end
-
-          if counter >= cursor.length
-            return [$implicit_final_rule, cursor.length]
+            if counter >= cursor.length
+              return [@implicit_final_rule, cursor.length]
+            end
+          rescue => e
+            binding.pry
           end
         end
 

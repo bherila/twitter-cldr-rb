@@ -38,10 +38,6 @@ module TwitterCldr
         @right.reset
       end
 
-      def id
-        @rule.id
-      end
-
       private
 
       def current

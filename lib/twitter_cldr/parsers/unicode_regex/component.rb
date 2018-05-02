@@ -7,11 +7,16 @@ module TwitterCldr
   module Parsers
     class UnicodeRegexParser
       class Component
+        include Enumerable
 
         attr_writer :quantifier
 
         def quantifier
           @quantifier ||= Quantifier.blank
+        end
+
+        def each(&block)
+          @elements.each(&block) if @elements
         end
 
         protected

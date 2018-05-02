@@ -5,6 +5,7 @@
 
 module TwitterCldr
   module Segmentation
+    autoload :AlternationState,      'twitter_cldr/segmentation/alternation_state'
     autoload :BrahmicBreakEngine,    'twitter_cldr/segmentation/brahmic_break_engine'
     autoload :BreakIterator,         'twitter_cldr/segmentation/break_iterator'
     autoload :BreakRule,             'twitter_cldr/segmentation/rule'

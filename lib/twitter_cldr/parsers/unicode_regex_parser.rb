@@ -10,6 +10,7 @@ module TwitterCldr
 
     class UnicodeRegexParser < Parser
 
+      autoload :Alternation,    'twitter_cldr/parsers/unicode_regex/alternation'
       autoload :Component,      'twitter_cldr/parsers/unicode_regex/component'
       autoload :CharacterClass, 'twitter_cldr/parsers/unicode_regex/character_class'
       autoload :CharacterRange, 'twitter_cldr/parsers/unicode_regex/character_range'
@@ -159,7 +160,49 @@ module TwitterCldr
           elem.quantifier = quantifier(current_token)
         end
 
+        # alternations can't really have quantifiers unless they're wrapped
+        # by a group, so it's fine to do the alternation check here after
+        # the quantifier check above
+        if elem && current_token
+          elem = alternation(elem)
+        end
+
         elem
+      end
+
+      def alternation(elem)
+        return elem unless current_token.type == :pipe
+        alternates = [[elem]]
+
+        # groups are the only thing I know of that can bound an alternation
+        while current_token && current_token.type != :group_end
+          case current_token.type
+            when :pipe
+              alternates << []
+              next_token(:pipe)
+            else
+              next_elem = element
+
+              # combine together (sorry this is hideous)
+              case next_elem
+                when Alternation
+                  # The next element may itself be an alternation. If so, assimilate it.
+                  # Resistance is futile.
+                  next_elem.alternates.each_with_index do |alternate, idx|
+                    if idx == 0
+                      alternates.last.concat(alternate)
+                    else
+                      alternates << alternate
+                    end
+                  end
+
+                else
+                  alternates.last << next_elem
+              end
+          end
+        end
+
+        Alternation.new(alternates.reject(&:empty?))
       end
 
       def quantifier(token)
@@ -245,8 +288,8 @@ module TwitterCldr
       alias :pipe :special_char
       alias :ampersand :special_char
 
-      # current_token is already a CharacterRange object
       def character_range(token)
+        # the current_token is already a CharacterRange object
         token
       end
 
