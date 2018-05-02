@@ -60,7 +60,7 @@ module TwitterCldr
 
       def each_rule(&block)
         return to_enum(__method__) unless block_given?
-        yield exception_rule if use_uli_exceptions? && supports_exceptions?
+        # yield exception_rule if use_uli_exceptions? && supports_exceptions?
         rule_set.each(&block)
       end
 
@@ -76,23 +76,18 @@ module TwitterCldr
 
       def find_match(cursor)
         each_rule do |rule|
-          begin
-            counter = cursor.position
+          counter = cursor.position
 
-            binding.pry if rule.id == 5
-            while counter < cursor.length && rule.accept(cursor.codepoints[counter])
-              if rule.satisfied? && rule.terminal?
-                return [rule, cursor.position + rule.left.num_accepted]
-              end
-
-              counter += 1
+          while counter < cursor.length && rule.accept(cursor.codepoints[counter])
+            if rule.satisfied? && rule.terminal?
+              return [rule, cursor.position + rule.left.num_accepted]
             end
 
-            if counter >= cursor.length
-              return [@implicit_final_rule, cursor.length]
-            end
-          rescue => e
-            binding.pry
+            counter += 1
+          end
+
+          if counter >= cursor.length
+            return [@implicit_final_rule, cursor.length]
           end
         end
 

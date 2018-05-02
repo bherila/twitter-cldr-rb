@@ -11,6 +11,8 @@ module TwitterCldr
         case element
           when TwitterCldr::Parsers::UnicodeRegexParser::Alternation
             AlternationState.new(element)
+          when TwitterCldr::Shared::UnicodeRegex
+            State.new(nil, element.elements)
           else
             # don't use a bare 'new' here since self.wrap is also inherited
             # by derived classes
@@ -20,13 +22,13 @@ module TwitterCldr
 
       attr_reader :num_accepted
 
-      def initialize(element)
+      def initialize(element, children = nil)
         @element = element
         @quantifier_min = quantifier.min
         @quantifier_max = quantifier.max
 
-        @children = if element.respond_to?(:each)
-          element.map { |elem| self.class.wrap(elem) }
+        @children = if (children || element).respond_to?(:each)
+          (children || element).map { |elem| self.class.wrap(elem) }
         end
 
         @children = nil if @children.empty?
@@ -60,6 +62,8 @@ module TwitterCldr
         if @children
           @children[@index].can_accept?(codepoint)
         else
+          return true unless @element
+
           set.include?(codepoint) &&
             @num_accepted < @quantifier_max
         end
@@ -86,6 +90,10 @@ module TwitterCldr
         end
 
         true
+      end
+
+      def blank?
+        !@children && !@element
       end
 
       def reset

@@ -10,10 +10,10 @@ module TwitterCldr
       attr_reader :left, :right, :id
 
       def initialize(left, right, id)
-        @index = 0
         @left = left
         @right = right
         @id = id
+        reset
       end
 
       def accept(codepoint)
@@ -34,8 +34,11 @@ module TwitterCldr
 
       def reset
         @index = 0
-        @left.reset
-        @right.reset
+        @left.reset if @left
+        @right.reset if @right
+
+        # some rules have blank left/right sides
+        @index = 1 if @left && @left.blank?
       end
 
       private
