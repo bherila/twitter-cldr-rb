@@ -70,8 +70,8 @@ module TwitterCldr
       end
 
       def satisfied?
-        # return false unless quantifier_in_bounds?(num_accepted)
-        return false unless @num_accepted >= @quantifier_min && @num_accepted <= @quantifier_max
+        return true if blank?
+        return true if @num_accepted >= @quantifier_min && @num_accepted <= @quantifier_max
         return true unless @children
 
         @index.upto(@children.size - 1) do |idx|
@@ -82,6 +82,7 @@ module TwitterCldr
       end
 
       def terminal?
+        return true if blank?
         return true unless @children
         return true unless @children[@index + 1]
 

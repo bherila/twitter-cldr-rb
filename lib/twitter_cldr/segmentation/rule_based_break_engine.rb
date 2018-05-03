@@ -38,6 +38,7 @@ module TwitterCldr
 
         until cursor.position >= end_pos
           rule, boundary_position = find_match(cursor)
+          puts rule.id
 
           if rule.break?
             yield boundary_position

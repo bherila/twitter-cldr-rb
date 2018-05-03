@@ -20,8 +20,7 @@ module TwitterCldr
           accepted = true if @children[idx].accept(codepoint)
         end
 
-        @num_accepted += 1 if satisfied?
-
+        @num_accepted += 1 if accepted
         accepted
       end
 

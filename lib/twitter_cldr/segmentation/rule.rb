@@ -25,11 +25,11 @@ module TwitterCldr
       end
 
       def terminal?
-        @index > 0
+        @index > 0 && @right.terminal?
       end
 
       def satisfied?
-        @right.satisfied?
+        @left.satisfied? && @right.satisfied?
       end
 
       def reset
