@@ -7,59 +7,56 @@ module TwitterCldr
   module Segmentation
 
     class State
-      def self.wrap(element)
-        case element
-          when TwitterCldr::Parsers::UnicodeRegexParser::Alternation
-            AlternationState.new(element)
-          when TwitterCldr::Shared::UnicodeRegex
-            State.new(nil, element.elements)
-          else
-            # don't use a bare 'new' here since self.wrap is also inherited
-            # by derived classes
-            State.new(element)
-        end
-      end
-
-      attr_reader :num_accepted
+      attr_reader :num_accepted, :children
 
       def initialize(element, children = nil)
         @element = element
         @quantifier_min = quantifier.min
         @quantifier_max = quantifier.max
-
-        @children = if (children || element).respond_to?(:each)
-          (children || element).map { |elem| self.class.wrap(elem) }
-        end
-
-        @children = nil if @children.empty?
-
+        @children = children
         reset
       end
 
       def accept(codepoint)
-        if @children
-          return false if @children.empty?
+        return accept_leaf(codepoint) unless @children
+        return false unless @children[@index]
 
-          if @children[@index].satisfied? && @children[@index + 1] && @children[@index + 1].can_accept?(codepoint)
+        if @children[@index].accept(codepoint)
+          @num_accepted += 1
+          return true
+        end
+
+        # find the next child in the chain that can accept the codepoint
+        old_index = @index
+
+        while @index < @children.size
+          if @children[@index].can_accept?(codepoint)
+            @num_accepted += 1
+            return @children[@index].accept(codepoint)
+          elsif @children[@index].satisfied?
             @index += 1
-          elsif terminal? && @children[@index].satisfied? && @children[0].can_accept?(codepoint)
-            @index = 0  # reset
+          else
+            @index = old_index
+            break
           end
+        end
 
-          @children[@index].accept(codepoint).tap do
-            if terminal? && @children[@index].satisfied?
-              @num_accepted += 1
-            end
-          end
-        else
-          can_accept?(codepoint).tap do |accepted|
-            @num_accepted += 1 if accepted
-          end
+        if @index == @children.size - 1
+          @index = 0
+        end
+
+        false
+      end
+
+      def accept_leaf(codepoint)
+        can_accept?(codepoint).tap do |accepted|
+          @num_accepted += 1 if accepted
         end
       end
 
       def can_accept?(codepoint)
         if @children
+          return false unless @children[@index]
           @children[@index].can_accept?(codepoint)
         else
           return true unless @element
@@ -71,26 +68,18 @@ module TwitterCldr
 
       def satisfied?
         return true if blank?
-        return true if @num_accepted >= @quantifier_min && @num_accepted <= @quantifier_max
-        return true unless @children
 
-        @index.upto(@children.size - 1) do |idx|
-          return false if !@children[idx].satisfied?
+        if @children
+          return true if @quantifier_min == 0
+
+          @index.upto(@children.size - 1) do |idx|
+            return false if !@children[idx].satisfied?
+          end
+
+          true
+        else
+          @num_accepted >= @quantifier_min && @num_accepted <= @quantifier_max
         end
-
-        true
-      end
-
-      def terminal?
-        return true if blank?
-        return true unless @children
-        return true unless @children[@index + 1]
-
-        @index.upto(@children.size - 1) do |idx|
-          return false if !@children[idx].terminal?
-        end
-
-        true
       end
 
       def blank?
@@ -100,7 +89,7 @@ module TwitterCldr
       def reset
         @index = 0
         @num_accepted = 0
-        @children && @children.each(&:reset)
+        @children.each(&:reset) if @children
       end
 
       private

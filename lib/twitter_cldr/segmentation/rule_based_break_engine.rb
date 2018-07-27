@@ -18,13 +18,18 @@ module TwitterCldr
         @locale = locale
 
         @rule_set = rule_set.map { |loaded_rule| loaded_rule.to_rule }
+        # @rule_set << BreakRule.new(
+        #   LoadedRule.build_state(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
+        #   :implicit_break
+        # )
         @rule_set << BreakRule.new(
-          State.wrap(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
-          State.wrap(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
+          LoadedRule.build_state(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
+          LoadedRule.build_state(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
           :implicit_break
         )
 
-        @implicit_final_rule = BreakRule.new(nil, nil, :implicit_final)
+        # @implicit_final_rule = BreakRule.new(State.new(nil, []), :implicit_final)
+        @implicit_final_rule = BreakRule.new(State.new(nil), State.new(nil), :implicit_final)
 
         @use_uli_exceptions = options.fetch(
           :use_uli_exceptions, false
@@ -38,7 +43,7 @@ module TwitterCldr
 
         until cursor.position >= end_pos
           rule, boundary_position = find_match(cursor)
-          puts rule.id
+          puts "#{cursor.position}: #{rule.id}"
 
           if rule.break?
             yield boundary_position
@@ -78,14 +83,18 @@ module TwitterCldr
 
       def find_match(cursor)
         each_rule do |rule|
+          # next unless rule.id == 11
+          # binding.pry if rule.id == 12
+          binding.pry if cursor.position == 12 && rule.id == 9
           counter = cursor.position
 
           while counter < cursor.length && rule.accept(cursor.codepoints[counter])
-            if rule.satisfied? && rule.terminal?
-              return [rule, cursor.position + rule.left.num_accepted]
-            end
-
             counter += 1
+          end
+
+          # binding.pry if cursor.position == 12 && rule.id == 8
+          if rule.satisfied? # && rule.terminal?
+            return [rule, cursor.position + rule.num_accepted]
           end
 
           if counter >= cursor.length
