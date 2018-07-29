@@ -13,6 +13,7 @@ module TwitterCldr
             case text
               when '*' then any
               when '+' then at_least_one
+              when '?' then at_most_one
               else
                 min, max = text.gsub(/[{}]/, '').split(',')
                 min = min.to_i
@@ -33,6 +34,10 @@ module TwitterCldr
 
           def at_least_one
             @at_least_one ||= new(1, Float::INFINITY, '+')
+          end
+
+          def at_most_one
+            @at_most_one ||= new(0, 1, '?')
           end
         end
 
