@@ -23,33 +23,21 @@ module TwitterCldr
           when :no_break then NoBreakRule
         end
 
-        # klass.new(
-        #   State.new(nil, [self.class.build_state(left), self.class.build_state(right)]), id
-        # )
-
         klass.new(
-          State.new(nil, [self.class.build_state(left)]),
-          State.new(nil, [self.class.build_state(right)]),
+          RuleSetLoader.build_state(left),
+          RuleSetLoader.build_state(right),
           id
         )
-      end
-
-      class << self
-        def build_state(element)
-          case element
-            when TwitterCldr::Parsers::UnicodeRegexParser::Alternation
-              AlternationState.new(element)
-            else
-              return State.new(element) unless element.respond_to?(:elements)
-              State.new(element, element.elements.map { |el| build_state(el) })
-          end
-        end
       end
     end
 
     class RuleSetLoader
 
       class << self
+        def build_state(regex)
+          State.new(RuleVisitor.new(regex).start || StateTable.new({}, 0))
+        end
+
         def load(locale, boundary_type)
           rule_cache[boundary_type] ||= begin
             boundary_name = boundary_name_for(boundary_type)

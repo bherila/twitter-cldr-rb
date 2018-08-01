@@ -22,9 +22,10 @@ module TwitterCldr
     autoload :PossibleWordList,      'twitter_cldr/segmentation/possible_word_list'
     autoload :Rule,                  'twitter_cldr/segmentation/rule'
     autoload :RuleBasedBreakEngine,  'twitter_cldr/segmentation/rule_based_break_engine'
-    autoload :RuleSet,               'twitter_cldr/segmentation/rule_set'
     autoload :RuleSetLoader,         'twitter_cldr/segmentation/rule_set_loader'
+    autoload :RuleVisitor,           'twitter_cldr/segmentation/rule_visitor'
     autoload :State,                 'twitter_cldr/segmentation/state'
+    autoload :StateTable,            'twitter_cldr/segmentation/state_table'
     autoload :ThaiBreakEngine,       'twitter_cldr/segmentation/thai_break_engine'
     autoload :UnhandledBreakEngine,  'twitter_cldr/segmentation/unhandled_break_engine'
   end

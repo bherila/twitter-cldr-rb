@@ -16,50 +16,43 @@ module TwitterCldr
 
       def initialize(locale, rule_set, options = {})
         @locale = locale
-
         @rule_set = rule_set.map { |loaded_rule| loaded_rule.to_rule }
-        # @rule_set << BreakRule.new(
-        #   LoadedRule.build_state(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
-        #   :implicit_break
-        # )
-        @rule_set << BreakRule.new(
-          LoadedRule.build_state(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
-          LoadedRule.build_state(TwitterCldr::Shared::UnicodeRegex.compile('[\u0000-\u10FFFF]')),
+
+        @implicit_break = BreakRule.new(
+          RuleSetLoader.build_state(TwitterCldr::Shared::UnicodeRegex.compile('')),
+          RuleSetLoader.build_state(TwitterCldr::Shared::UnicodeRegex.compile('')),
           :implicit_break
         )
-
-        # @implicit_final_rule = BreakRule.new(State.new(nil, []), :implicit_final)
-        @implicit_final_rule = BreakRule.new(State.new(nil), State.new(nil), :implicit_final)
 
         @use_uli_exceptions = options.fetch(
           :use_uli_exceptions, false
         )
+
+        @boundary_cache = {}
       end
 
       def each_boundary(cursor, end_pos = cursor.length)
         return to_enum(__method__, cursor, end_pos) unless block_given?
 
+        rule_set.each(&:reset)
         last_boundary = cursor.position
 
+        # implicit start of text boundary
+        yield 0 if cursor.position == 0
+
         until cursor.position >= end_pos
-          rule, boundary_position = find_match(cursor)
-          puts "#{cursor.position}: #{rule.id}"
+          rule = find_match(cursor)
 
-          if rule.break?
-            yield boundary_position
-            last_boundary = boundary_position
+          if rule.break? && cursor.position != last_boundary
+            yield cursor.position
+            last_boundary = cursor.position
           end
 
-          if boundary_position == cursor.position
-            cursor.advance
-          else
-            cursor.advance(
-              boundary_position - cursor.position
-            )
-          end
-
-          rule_set.each(&:reset)
+          cursor.advance
         end
+
+        # implicit end of text boundary
+        yield end_pos if last_boundary < end_pos
       end
 
       private
@@ -82,27 +75,45 @@ module TwitterCldr
       end
 
       def find_match(cursor)
-        each_rule do |rule|
-          # next unless rule.id == 11
-          # binding.pry if rule.id == 12
-          binding.pry if cursor.position == 12 && rule.id == 9
-          counter = cursor.position
+        each_rule(&:reset)
+        counter = cursor.position
+        rules = each_rule.to_a
+        terminal_rules = []
+        rule_positions = {}
 
-          while counter < cursor.length && rule.accept(cursor.codepoints[counter])
-            counter += 1
+        until rules.empty?
+          rules.reject! do |rule|
+            if rule.terminal?
+              rule_positions[rule.id] = counter
+              terminal_rules << rule
+            elsif !rule.accept(cursor.codepoints[counter])
+              # need to check terminal? again because we just called accept
+              # on the rule
+              if rule.terminal?
+                rule_positions[rule.id] = counter
+                terminal_rules << rule
+              end
+
+              true
+            else
+              false
+            end
           end
 
-          # binding.pry if cursor.position == 12 && rule.id == 8
-          if rule.satisfied? # && rule.terminal?
-            return [rule, cursor.position + rule.num_accepted]
-          end
-
-          if counter >= cursor.length
-            return [@implicit_final_rule, cursor.length]
-          end
+          counter += 1
         end
 
-        nil  # we should never get here in practice
+        terminal_rules.each do |rule|
+          pos = rule_positions[rule.id]
+          @boundary_cache[pos - rule.right.num_accepted] ||= rule
+        end
+
+        if match = @boundary_cache[cursor.position]
+          @boundary_cache.delete(cursor.position)
+          match
+        else
+          @implicit_break
+        end
       end
     end
 

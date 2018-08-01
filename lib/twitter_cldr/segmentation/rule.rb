@@ -6,74 +6,6 @@
 module TwitterCldr
   module Segmentation
 
-    # class Rule
-    #   attr_reader :left, :right, :id
-
-    #   def initialize(left, right, id)
-    #     @left = left
-    #     @right = right
-    #     @id = id
-    #     reset
-    #   end
-
-    #   def accept(codepoint)
-    #     if @left.satisfied? && @right.can_accept?(codepoint)
-    #       @index += 1
-    #     end
-
-    #     current.accept(codepoint)
-    #   end
-
-    #   def terminal?
-    #     @index > 0 && @right.terminal?
-    #   end
-
-    #   def satisfied?
-    #     @left.satisfied? && @right.satisfied?
-    #   end
-
-    #   def reset
-    #     @index = 0
-    #     @left.reset if @left
-    #     @right.reset if @right
-
-    #     # some rules have blank left/right sides
-    #     @index = 1 if @left && @left.blank?
-    #   end
-
-    #   private
-
-    #   def current
-    #     terminal? ? @right : @left
-    #   end
-    # end
-
-    # class Rule
-    #   attr_reader :state, :id
-
-    #   def initialize(state, id)
-    #     @state = state
-    #     @id = id
-    #   end
-
-    #   def accept(codepoint)
-    #     state.accept(codepoint)
-    #   end
-
-    #   def satisfied?
-    #     state.satisfied?
-    #   end
-
-    #   def reset
-    #     state.reset
-    #   end
-
-    #   def num_accepted
-    #     state.num_accepted
-    #     # state.children.first.num_accepted
-    #   end
-    # end
-
     class Rule
       attr_reader :left, :right, :id
 
@@ -85,34 +17,27 @@ module TwitterCldr
       end
 
       def accept(codepoint)
-        if @left.satisfied? && @right.can_accept?(codepoint)
-          @index += 1
+        accepted = @current.accept(codepoint)
+
+        if @current.current_state == 0
+          reset
+          @left.reset
+          @right.reset
+        elsif @left.terminal? && @current == @left
+          @current = @right
         end
 
-        current.accept(codepoint)
+        accepted
       end
 
-      def satisfied?
-        @left.satisfied? && @right.satisfied?
+      def terminal?
+        @left.terminal? && @right.terminal?
       end
 
       def reset
-        @index = 0
-        @left.reset if @left
-        @right.reset if @right
-
-        # some rules have blank left/right sides
-        @index = 1 if @left && @left.blank?
-      end
-
-      def num_accepted
-        @left.num_accepted
-      end
-
-      private
-
-      def current
-        @index == 0 ? @left : @right
+        @current = @left
+        @left.reset
+        @right.reset
       end
     end
 
@@ -122,7 +47,6 @@ module TwitterCldr
       end
 
       def break?
-        # terminal? && satisfied?
         true
       end
 
@@ -141,7 +65,6 @@ module TwitterCldr
       end
 
       def no_break?
-        # terminal? && satisfied?
         true
       end
     end
