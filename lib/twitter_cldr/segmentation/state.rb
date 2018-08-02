@@ -8,7 +8,6 @@ module TwitterCldr
 
       def initialize(state_table)
         @state_table = state_table
-        state_table.table.default = nil
         reset
       end
 

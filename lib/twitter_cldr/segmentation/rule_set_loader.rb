@@ -35,7 +35,8 @@ module TwitterCldr
 
       class << self
         def build_state(regex)
-          State.new(RuleVisitor.new(regex).start || StateTable.new({}, 0))
+          state_table = RuleVisitor.new(regex).start || StateTable.new({}, 0)
+          State.new(state_table.finalize)
         end
 
         def load(locale, boundary_type)

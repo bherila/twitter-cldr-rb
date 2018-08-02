@@ -1,6 +1,19 @@
 module TwitterCldr
   module Segmentation
 
+    class FinalizedStateTable
+      attr_reader :table, :exit_state
+
+      def initialize(table, exit_state)
+        @table = table
+        @exit_state = exit_state
+      end
+
+      def [](state)
+        table[state]
+      end
+    end
+
     class StateTable
       attr_reader :table, :exit_state
 
@@ -15,6 +28,14 @@ module TwitterCldr
 
       def [](state)
         table[state]
+      end
+
+      def finalize
+        new_table = table.each_with_object({}) do |(state, transitions), ret|
+          ret[state] = TwitterCldr::Utils::RangeHash.from_hash(transitions)
+        end
+
+        FinalizedStateTable.new(new_table, exit_state)
       end
 
       def each_transition
