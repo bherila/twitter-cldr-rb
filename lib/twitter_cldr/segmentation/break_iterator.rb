@@ -54,7 +54,7 @@ module TwitterCldr
 
       def each_sentence(str, &block)
         rule_break_engine = rule_break_engine_for('sentence')
-        each_boundary(rule_break_engine, get_cursor_for(str), &block)
+        each_boundary(rule_break_engine, cursor_for(str), &block)
       end
 
       def each_word(str)
@@ -86,7 +86,7 @@ module TwitterCldr
         self.class.dictionary_set.include?(codepoint)
       end
 
-      def get_cursor_for(str)
+      def cursor_for(str)
         Cursor.new(str)
       end
 
@@ -102,7 +102,7 @@ module TwitterCldr
         return to_enum(__method__, str) unless block_given?
 
         rule_break_engine = rule_break_engine_for('word')
-        cursor = get_cursor_for(str)
+        cursor = cursor_for(str)
 
         # implicit start of text boundary
         last_boundary = 0

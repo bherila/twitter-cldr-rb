@@ -7,7 +7,7 @@ module TwitterCldr
   module Parsers
     class UnicodeRegexParser
 
-      # unicode_char, escaped_char, string, multichar_string
+      # unicode_char, escaped_char, string
       # Can exist inside and outside of character classes
       class UnicodeString < Component
 
@@ -18,16 +18,7 @@ module TwitterCldr
         end
 
         def to_set
-          # If the number of codepoints is greater than 1, treat them as a
-          # group (eg. multichar string). This is definitely a hack in that
-          # it means there has to be special logic in RangeSet that deals
-          # with data types that aren't true integer ranges. I can't think
-          # of any other way to support multichar strings :(
-          if codepoints.size > 1
-            TwitterCldr::Utils::RangeSet.new([codepoints..codepoints])
-          else
-            TwitterCldr::Utils::RangeSet.new([codepoints.first..codepoints.first])
-          end
+          TwitterCldr::Utils::RangeSet.from_array(codepoints)
         end
 
         def to_regexp_str

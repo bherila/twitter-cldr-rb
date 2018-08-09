@@ -31,7 +31,7 @@ module TwitterCldr
         def get(name)
           dictionary_cache[name] ||= begin
             resource = TwitterCldr.get_resource(
-              'shared', 'segments', 'dictionaries', "#{name}dict.dump"
+              'segmentation', 'dictionaries', "#{name}dict.dump"
             )
 
             new(resource)

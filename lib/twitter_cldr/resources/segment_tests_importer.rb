@@ -15,7 +15,7 @@ module TwitterCldr
       ]
 
       requirement :unicode, Versions.unicode_version, TEST_FILES
-      output_path 'shared/segments/tests'
+      output_path 'segmentation/tests'
       ruby_engine :mri
 
       def execute

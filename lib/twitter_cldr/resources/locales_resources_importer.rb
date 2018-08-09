@@ -35,7 +35,6 @@ module TwitterCldr
         currency_digits_and_rounding
         rbnf_root
         numbering_systems
-        segments_root
         territories_containment
         likely_subtags
         variables
@@ -55,18 +54,6 @@ module TwitterCldr
 
       def output_path
         params.fetch(:output_path)
-      end
-
-      def move_segments_root_file
-        file_path = File.join(output_path, 'shared', 'segments_root.yml')
-
-        if File.file?(file_path)
-          FileUtils.move(
-            file_path, File.join(
-              output_path, 'shared', 'segments', 'segments_root.yml'
-            )
-          )
-        end
       end
 
       def import_components
@@ -101,8 +88,6 @@ module TwitterCldr
         Cldr::Export.export(export_args) do |component, locale, path|
           deep_symbolize(path)
         end
-
-        move_segments_root_file
       end
 
       def components_for(locale)

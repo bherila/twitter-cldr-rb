@@ -11,6 +11,10 @@ module TwitterCldr
         reset
       end
 
+      def empty?
+        state_table.empty?
+      end
+
       def accept(cp)
         if found = current[cp]
           @current_state = found

@@ -21,14 +21,15 @@ module TwitterCldr
     autoload :ReadmeRenderer,                 'twitter_cldr/resources/readme_renderer'
     autoload :RegexpAstGenerator,             'twitter_cldr/resources/regexp_ast_generator'
     autoload :Requirements,                   'twitter_cldr/resources/requirements'
+    autoload :SegmentStateTablesImporter,     'twitter_cldr/resources/segment_state_tables_importer'
     autoload :SegmentTestsImporter,           'twitter_cldr/resources/segment_tests_importer'
     autoload :SegmentDictionariesImporter,    'twitter_cldr/resources/segment_dictionaries_importer'
+    autoload :Segmentation,                   'twitter_cldr/resources/segmentation'
     autoload :TailoringImporter,              'twitter_cldr/resources/tailoring_importer'
     autoload :TransformTestImporter,          'twitter_cldr/resources/transform_test_importer'
     autoload :UnicodeDataImporter,            'twitter_cldr/resources/unicode_data_importer'
     autoload :UnicodeFileParser,              'twitter_cldr/resources/unicode_file_parser'
     autoload :UnicodePropertyAliasesImporter, 'twitter_cldr/resources/unicode_property_aliases_importer'
-    autoload :Uli,                            'twitter_cldr/resources/uli'
 
     class << self
       # these importer class methods aren't constants in order to avoid loading
@@ -45,20 +46,13 @@ module TwitterCldr
           PhoneCodesImporter,
           PostalCodesImporter,
           RbnfTestImporter,
+          SegmentStateTablesImporter,
           SegmentTestsImporter,
           SegmentDictionariesImporter,
           TailoringImporter,
           TransformTestImporter,
           UnicodeDataImporter,
           UnicodePropertyAliasesImporter,
-        ]
-      end
-
-      def uli_importer_classes
-        @uli_importer_classes ||= [
-          # Disabled for now since ULI TRAC has been down for quite a while.
-          # Word is data will eventually be available in a git repo.
-          # Uli::SegmentExceptionsImporter
         ]
       end
 
@@ -88,7 +82,6 @@ module TwitterCldr
       def importer_classes
         @importer_classes ||=
           standard_importer_classes +
-          uli_importer_classes +
           property_importer_classes
       end
 

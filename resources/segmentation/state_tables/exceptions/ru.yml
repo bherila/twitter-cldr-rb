@@ -1,0 +1,466 @@
+---
+:id: 0
+:string: "(руб\\.|янв\\.|до\\ н\\.\\ э\\.|сент\\.|тел\\.|дек\\.|февр\\.|нояб\\.|апр\\.|н\\.\\
+  э\\.|окт\\.|тыс\\.|авг\\.|проф\\.|н\\.э\\.|кв\\.|ул\\.|отд\\.)\\u0020 × "
+:boundary_symbol: :no_break
+:left:
+  :table:
+    0: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1072..1072
+        - 48
+      - - 1
+        - 1076..1076
+        - 9
+      - - 2
+        - 1082..1082
+        - 67
+      - - 3
+        - 1085..1085
+        - 37
+      - - 4
+        - 1086..1086
+        - 55
+      - - 5
+        - 1087..1087
+        - 62
+      - - 6
+        - 1088..1088
+        - 1
+      - - 7
+        - 1089..1089
+        - 20
+      - - 8
+        - 1090..1090
+        - 25
+      - - 9
+        - 1091..1091
+        - 70
+      - - 10
+        - 1092..1092
+        - 32
+      - - 11
+        - 1103..1103
+        - 5
+      :non_int_pairs: {}
+    1: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1091..1091
+        - 2
+      :non_int_pairs: {}
+    2: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1073..1073
+        - 3
+      :non_int_pairs: {}
+    3: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 4
+      :non_int_pairs: {}
+    4: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    5: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1085..1085
+        - 6
+      :non_int_pairs: {}
+    6: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1074..1074
+        - 7
+      :non_int_pairs: {}
+    7: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 8
+      :non_int_pairs: {}
+    8: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    9: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1077..1077
+        - 17
+      - - 1
+        - 1086..1086
+        - 10
+      :non_int_pairs: {}
+    10: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 32..32
+        - 11
+      :non_int_pairs: {}
+    11: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1085..1085
+        - 12
+      :non_int_pairs: {}
+    12: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 13
+      :non_int_pairs: {}
+    13: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 32..32
+        - 14
+      :non_int_pairs: {}
+    14: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1101..1101
+        - 15
+      :non_int_pairs: {}
+    15: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 16
+      :non_int_pairs: {}
+    16: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    17: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1082..1082
+        - 18
+      :non_int_pairs: {}
+    18: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 19
+      :non_int_pairs: {}
+    19: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    20: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1077..1077
+        - 21
+      :non_int_pairs: {}
+    21: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1085..1085
+        - 22
+      :non_int_pairs: {}
+    22: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1090..1090
+        - 23
+      :non_int_pairs: {}
+    23: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 24
+      :non_int_pairs: {}
+    24: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    25: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1077..1077
+        - 26
+      - - 1
+        - 1099..1099
+        - 29
+      :non_int_pairs: {}
+    26: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1083..1083
+        - 27
+      :non_int_pairs: {}
+    27: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 28
+      :non_int_pairs: {}
+    28: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    29: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1089..1089
+        - 30
+      :non_int_pairs: {}
+    30: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 31
+      :non_int_pairs: {}
+    31: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    32: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1077..1077
+        - 33
+      :non_int_pairs: {}
+    33: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1074..1074
+        - 34
+      :non_int_pairs: {}
+    34: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1088..1088
+        - 35
+      :non_int_pairs: {}
+    35: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 36
+      :non_int_pairs: {}
+    36: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    37: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 42
+      - - 1
+        - 1086..1086
+        - 38
+      :non_int_pairs: {}
+    38: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1103..1103
+        - 39
+      :non_int_pairs: {}
+    39: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1073..1073
+        - 40
+      :non_int_pairs: {}
+    40: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 41
+      :non_int_pairs: {}
+    41: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    42: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 32..32
+        - 43
+      - - 1
+        - 1101..1101
+        - 46
+      :non_int_pairs: {}
+    43: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1101..1101
+        - 44
+      :non_int_pairs: {}
+    44: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 45
+      :non_int_pairs: {}
+    45: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    46: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 47
+      :non_int_pairs: {}
+    47: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    48: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1074..1074
+        - 52
+      - - 1
+        - 1087..1087
+        - 49
+      :non_int_pairs: {}
+    49: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1088..1088
+        - 50
+      :non_int_pairs: {}
+    50: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 51
+      :non_int_pairs: {}
+    51: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    52: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1075..1075
+        - 53
+      :non_int_pairs: {}
+    53: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 54
+      :non_int_pairs: {}
+    54: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    55: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1082..1082
+        - 56
+      - - 1
+        - 1090..1090
+        - 59
+      :non_int_pairs: {}
+    56: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1090..1090
+        - 57
+      :non_int_pairs: {}
+    57: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 58
+      :non_int_pairs: {}
+    58: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    59: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1076..1076
+        - 60
+      :non_int_pairs: {}
+    60: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 61
+      :non_int_pairs: {}
+    61: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    62: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1088..1088
+        - 63
+      :non_int_pairs: {}
+    63: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1086..1086
+        - 64
+      :non_int_pairs: {}
+    64: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1092..1092
+        - 65
+      :non_int_pairs: {}
+    65: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 66
+      :non_int_pairs: {}
+    66: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    67: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1074..1074
+        - 68
+      :non_int_pairs: {}
+    68: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 69
+      :non_int_pairs: {}
+    69: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs: []
+      :non_int_pairs:
+        :else: 72
+    70: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 1083..1083
+        - 71
+      :non_int_pairs: {}
+    71: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 46..46
+        - 72
+      :non_int_pairs: {}
+    72: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 32..32
+        - 73
+      :non_int_pairs: {}
+  :exit_state: 73
+:right:
+  :table: {}
+  :exit_state: 0

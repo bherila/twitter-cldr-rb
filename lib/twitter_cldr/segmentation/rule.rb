@@ -7,12 +7,13 @@ module TwitterCldr
   module Segmentation
 
     class Rule
-      attr_reader :left, :right, :id
+      attr_reader :left, :right, :id, :string
 
-      def initialize(left, right, id)
+      def initialize(left, right, id, string)
         @left = left
         @right = right
         @id = id
+        @string = string
         reset
       end
 
@@ -21,8 +22,6 @@ module TwitterCldr
 
         if @current.current_state == 0
           reset
-          @left.reset
-          @right.reset
         elsif @left.terminal? && @current == @left
           @current = @right
         end
@@ -36,6 +35,7 @@ module TwitterCldr
 
       def reset
         @current = @left
+        @current = @right if @left.empty?
         @left.reset
         @right.reset
       end

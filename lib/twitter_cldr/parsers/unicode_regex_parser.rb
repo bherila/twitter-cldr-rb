@@ -10,15 +10,16 @@ module TwitterCldr
 
     class UnicodeRegexParser < Parser
 
-      autoload :Alternation,    'twitter_cldr/parsers/unicode_regex/alternation'
-      autoload :Component,      'twitter_cldr/parsers/unicode_regex/component'
-      autoload :CharacterClass, 'twitter_cldr/parsers/unicode_regex/character_class'
-      autoload :CharacterRange, 'twitter_cldr/parsers/unicode_regex/character_range'
-      autoload :CharacterSet,   'twitter_cldr/parsers/unicode_regex/character_set'
-      autoload :Group,          'twitter_cldr/parsers/unicode_regex/group'
-      autoload :Literal,        'twitter_cldr/parsers/unicode_regex/literal'
-      autoload :Quantifier,     'twitter_cldr/parsers/unicode_regex/quantifier'
-      autoload :UnicodeString,  'twitter_cldr/parsers/unicode_regex/unicode_string'
+      autoload :Alternation,     'twitter_cldr/parsers/unicode_regex/alternation'
+      autoload :Component,       'twitter_cldr/parsers/unicode_regex/component'
+      autoload :CharacterClass,  'twitter_cldr/parsers/unicode_regex/character_class'
+      autoload :CharacterRange,  'twitter_cldr/parsers/unicode_regex/character_range'
+      autoload :CharacterSet,    'twitter_cldr/parsers/unicode_regex/character_set'
+      autoload :Group,           'twitter_cldr/parsers/unicode_regex/group'
+      autoload :Literal,         'twitter_cldr/parsers/unicode_regex/literal'
+      autoload :MulticharString, 'twitter_cldr/parsers/unicode_regex/multichar_string'
+      autoload :Quantifier,      'twitter_cldr/parsers/unicode_regex/quantifier'
+      autoload :UnicodeString,   'twitter_cldr/parsers/unicode_regex/unicode_string'
 
       def parse(tokens, options = {})
         super(
@@ -72,8 +73,8 @@ module TwitterCldr
             tokens[i + 1].type == :dash
 
           if is_range
-            initial = send(tokens[i].type, tokens[i])
-            final = send(tokens[i + 2].type, tokens[i + 2])
+            initial = send("#{tokens[i].type}_from", tokens[i])
+            final = send("#{tokens[i + 2].type}_from", tokens[i + 2])
             result << make_character_range(initial, final)
             i += 3
           else
@@ -134,16 +135,16 @@ module TwitterCldr
       end
 
       def do_parse(options)
-        [].tap do |list|
+        [].tap do |ast|
           while current_token
-            if next_elem = element
-              list << next_elem
+            if next_elem = element(ast)
+              ast << next_elem
             end
           end
         end
       end
 
-      def element
+      def element(ast)
         elem = case current_token.type
           when :open_bracket
             character_class
@@ -151,28 +152,27 @@ module TwitterCldr
             next_token(:union)
             nil
           when :group_start
-            group(current_token)
+            group(ast)
+          when :pipe
+            alternation(ast)
           else
-            unhandled(current_token)
+            send(current_token.type)
         end
 
         if elem && current_token
-          elem.quantifier = quantifier(current_token)
-        end
-
-        # alternations can't really have quantifiers unless they're wrapped
-        # by a group, so it's fine to do the alternation check here after
-        # the quantifier check above
-        if elem && current_token
-          elem = alternation(elem)
+          elem.quantifier = quantifier
         end
 
         elem
       end
 
-      def alternation(elem)
-        return elem unless current_token.type == :pipe
-        alternates = [[elem]]
+      def alternation(ast)
+        # Alternations are the only regex feature we can't know is coming because
+        # the punctuation happens _after_ the first alternate. This means we have
+        # to pass around the AST we've generated so far. The entire thing is the
+        # first alternate.
+        alternates = [ast.dup]
+        ast.clear
 
         # groups are the only thing I know of that can bound an alternation
         while current_token && current_token.type != :group_end
@@ -181,7 +181,7 @@ module TwitterCldr
               alternates << []
               next_token(:pipe)
             else
-              next_elem = element
+              next_elem = element(ast)
 
               # combine together (sorry this is hideous)
               case next_elem
@@ -205,51 +205,82 @@ module TwitterCldr
         Alternation.new(alternates.reject(&:empty?))
       end
 
-      def quantifier(token)
-        case token.type
+      def quantifier
+        case current_token.type
           when :static_quantifier, :ranged_quantifier
-            Quantifier.from(token.value).tap do
-              next_token(token.type)
+            Quantifier.from(current_token.value).tap do
+              next_token(current_token.type)
             end
         end
       end
 
-      def unhandled(token)
-        send(token.type, token).tap { next_token(token.type) }
+      def character_set
+        character_set_from(current_token).tap do
+          next_token(:character_set)
+        end
       end
 
-      def character_set(token)
+      def character_set_from(token)
         CharacterSet.new(
-          token.value.gsub(/^\\p/, "").gsub(/[\{\}\[\]:]/, "")
+          token.value.gsub(/^\\p/, '').gsub(/[\{\}\[\]:]/, '')
         )
       end
 
-      def negated_character_set(token)
+      def negated_character_set
+        negated_character_set_from(current_token).tap do
+          next_token(:negated_character_set)
+        end
+      end
+
+      def negated_character_set_from(token)
         CharacterSet.new(
-          token.value.gsub(/^\\[pP]/, "").gsub(/[\{\}\[\]:^]/, "")
+          token.value.gsub(/^\\[pP]/, '').gsub(/[\{\}\[\]:^]/, '')
         )
       end
 
-      def unicode_char(token)
-        UnicodeString.new(
-          [token.value.gsub(/^\\u/, "").gsub(/[\{\}]/, "").to_i(16)]
-        )
+      def string
+        string_from(current_token).tap do
+          next_token(current_token.type)
+        end
       end
 
-      def string(token)
-        UnicodeString.new(
-          token.value.unpack("U*")
-        )
+      def string_from(token)
+        UnicodeString.new(codepoints_from(token))
       end
 
-      def multichar_string(token)
-        UnicodeString.new(
-          token.value.gsub(/[\{\}]/, "").unpack("U*")
-        )
+      def codepoints_from(token)
+        case token.type
+          when :unicode_char
+            [token.value
+              .gsub(/^\\u/, '')
+              .gsub(/[\{\}]/, '')
+              .to_i(16)]
+
+          when :string
+            token.value.unpack('U*')
+
+          else
+            []
+        end
       end
 
-      def literal(token)
-        Literal.new(token.value)
+      alias :unicode_char :string
+      alias :unicode_char_from :string_from
+
+      def multichar_string
+        multichar_string_from(current_token).tap do
+          next_token(:multichar_string)
+        end
+      end
+
+      def multichar_string_from(token)
+        MulticharString.new(token.value.gsub(/[\{\}]/, '').unpack('U*'))
+      end
+
+      def literal
+        literal_from(current_token).tap do
+          next_token(current_token.type)
+        end
       end
 
       alias :escaped_character :literal
@@ -263,7 +294,16 @@ module TwitterCldr
       alias :static_quantifier :literal
       alias :ranged_quantifier :literal
 
-      def group(token)
+      def literal_from(token)
+        Literal.new(token.value)
+      end
+
+      alias :escaped_character_from :literal_from
+      alias :special_char_from :literal_from
+
+      def group(ast)
+        elements = []
+
         Group.new.tap do |g|
           next_token(:group_start)
 
@@ -275,12 +315,13 @@ module TwitterCldr
           end
 
           until current_token.type == :group_end
-            if next_elem = element
-              g.elements << next_elem
+            if next_elem = element(elements)
+              elements << next_elem
             end
           end
 
           next_token(:group_end)
+          g.elements.concat(elements)
         end
       end
 
@@ -288,9 +329,9 @@ module TwitterCldr
       alias :pipe :special_char
       alias :ampersand :special_char
 
-      def character_range(token)
+      def character_range
         # the current_token is already a CharacterRange object
-        token
+        current_token.tap { next_token(:character_range) }
       end
 
       def character_class
@@ -304,22 +345,22 @@ module TwitterCldr
               open_count -= 1
               build_until_open(operator_stack, operand_stack)
               add_implicit_union(operator_stack, open_count)
+              next_token(current_token.type)
 
             when *CharacterClass.opening_types
               open_count += 1
               operator_stack.push(current_token)
+              next_token(current_token.type)
 
             when *(BINARY_OPERATORS + UNARY_OPERATORS)
               operator_stack.push(current_token)
+              next_token(current_token.type)
 
             else
               add_implicit_union(operator_stack, open_count)
-              operand_stack.push(
-                send(current_token.type, current_token)
-              )
+              operand_stack.push(send(current_token.type))
           end
 
-          next_token(current_token.type)
           break if operator_stack.empty? && open_count == 0
         end
 
@@ -361,7 +402,7 @@ module TwitterCldr
       # and 'c'. For example, /[-abc]*/.match('-ba') returns 0 in Ruby.
       def get_non_range_dash_node(operator, operand_stack)
         binary_operator_node(
-          :union, operand_stack.pop, string(make_token(:string, '-'))
+          :union, operand_stack.pop, string_from(make_token(:string, '-'))
         )
       end
 

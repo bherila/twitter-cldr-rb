@@ -13,7 +13,8 @@ require 'rubygems/package_task'
 
 require './lib/twitter_cldr'
 
-require 'pry-nav'
+# require 'pry-nav'
+require 'pry-byebug'
 
 Bundler::GemHelper.install_tasks
 
@@ -136,6 +137,11 @@ namespace :update do
   desc 'Import segment exceptions'
   task :segment_exceptions do
     TwitterCldr::Resources::Uli::SegmentExceptionsImporter.new.import
+  end
+
+  desc 'Import segmentation state tables'
+  task :segment_state_tables do
+    TwitterCldr::Resources::SegmentStateTablesImporter.new.import
   end
 
   desc 'Import segmentation tests'

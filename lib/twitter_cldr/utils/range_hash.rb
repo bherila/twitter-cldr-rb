@@ -31,7 +31,7 @@ module TwitterCldr
           last_value = hash[key]
         end
 
-        if !int_pairs.last || int_pairs.last.last != last_value
+        if (int_pairs.empty? && start) || (!int_pairs.empty? && int_pairs.last.last != last_value)
           int_pairs << [idx, start..last_key, last_value]
         end
 
@@ -50,6 +50,15 @@ module TwitterCldr
         @include_cache = {}
       end
 
+      def init_with(coder)
+        int_pairs = coder[:int_pairs].map do |int_pair|
+          first, last = int_pair[1].split('..')
+          [int_pair[0], (first.to_i)..(last.to_i), int_pair[2]]
+        end
+
+        initialize(int_pairs, coder[:non_int_pairs])
+      end
+
       def [](key)
         @entry_cache[key] ||= begin
           if key.is_a?(Integer)
@@ -66,6 +75,14 @@ module TwitterCldr
         return @non_int_pairs.include?(key) unless key.is_a?(Integer)
         range = find(key)
         return !!range
+      end
+
+      def encode_with(coder)
+        coder[:int_pairs] = @int_pairs.map do |int_pair|
+          [int_pair[0], "#{int_pair[1].first}..#{int_pair[1].last}", int_pair[2]]
+        end
+
+        coder[:non_int_pairs] = @non_int_pairs
       end
 
       private

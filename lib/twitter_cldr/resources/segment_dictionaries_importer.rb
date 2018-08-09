@@ -20,7 +20,7 @@ module TwitterCldr
         'icu4c/source/data/brkitr/dictionaries/thaidict.txt'
       ]
 
-      output_path 'shared/segments/dictionaries'
+      output_path 'segmentation/dictionaries'
       ruby_engine :mri
 
       def execute

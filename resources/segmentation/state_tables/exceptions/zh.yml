@@ -1,0 +1,16 @@
+---
+:id: 0
+:string: " × \\u0020"
+:boundary_symbol: :no_break
+:left:
+  :table: {}
+  :exit_state: 0
+:right:
+  :table:
+    0: !ruby/object:TwitterCldr::Utils::RangeHash
+      :int_pairs:
+      - - 0
+        - 32..32
+        - 1
+      :non_int_pairs: {}
+  :exit_state: 1
