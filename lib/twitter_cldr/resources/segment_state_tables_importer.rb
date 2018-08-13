@@ -32,11 +32,15 @@ module TwitterCldr
       def write_root_state_tables(builder)
         BOUNDARY_TYPES.each do |boundary_type|
           rule_set = builder.build(boundary_type)
+          # binding.pry
+          puts 'writing'
 
           File.write(
             root_output_path_for(boundary_type),
             YAML.dump(rule_set)
           )
+
+          puts 'done'
         end
       end
 

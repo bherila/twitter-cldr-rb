@@ -113,20 +113,16 @@ module TwitterCldr
         reset_rules
         counter = cursor.position
         rules = each_rule.to_a
-        terminal_rules = []
-        rule_positions = {}
 
         until rules.empty?
           rules.reject! do |rule|
             if rule.terminal?
-              rule_positions[rule.id] = counter
-              terminal_rules << rule
+              @boundary_cache[counter - rule.right.num_accepted] ||= rule
             elsif !rule.accept(cursor.codepoints[counter])
               # need to check terminal? again because we just called #accept
               # on the rule
               if rule.terminal?
-                rule_positions[rule.id] = counter
-                terminal_rules << rule
+                @boundary_cache[counter - rule.right.num_accepted] ||= rule
               end
 
               true
@@ -136,11 +132,6 @@ module TwitterCldr
           end
 
           counter += 1
-        end
-
-        terminal_rules.each do |rule|
-          pos = rule_positions[rule.id]
-          @boundary_cache[pos - rule.right.num_accepted] ||= rule
         end
 
         if match = @boundary_cache[cursor.position]

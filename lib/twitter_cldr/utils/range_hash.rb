@@ -1,105 +1,126 @@
+# encoding: UTF-8
+
+# Copyright 2012 Twitter, Inc
+# http://www.apache.org/licenses/LICENSE-2.0
+
 module TwitterCldr
   module Utils
     class RangeHash
       def self.from_hash(hash)
-        int_pairs = []
-
-        start = nil
         last_key = nil
         last_value = nil
-        idx = 0
+        start_key = nil
+        start_value = nil
+        int_elements = []
 
-        int_keys, non_int_keys = hash.keys.partition do |key|
-          key.is_a?(Integer)
-        end
-
-        int_keys.sort.each do |key|
-          unless last_key
-            last_key = key
-            start = key
-            last_value = hash[key]
-            next
-          end
-
-          if key != last_key + 1 || hash[key] != last_value
-            int_pairs << [idx, start..last_key, last_value]
-            start = key
-            idx += 1
-          end
-
-          last_key = key
-          last_value = hash[key]
-        end
-
-        if (int_pairs.empty? && start) || (!int_pairs.empty? && int_pairs.last.last != last_value)
-          int_pairs << [idx, start..last_key, last_value]
-        end
-
-        non_int_pairs = non_int_keys.each_with_object({}) do |k, ret|
+        int_keys, other_keys = hash.keys.partition { |k| k.is_a?(Integer) }
+        other_elements = other_keys.each_with_object({}) do |k, ret|
           ret[k] = hash[k]
         end
 
-        new(int_pairs, non_int_pairs)
+        return new([], other_elements) if int_keys.empty?
+
+        int_keys.sort.each do |key|
+          value = hash[key]
+
+          unless last_key
+            last_key = key
+            last_value = value
+            start_key = key
+            start_value = value
+            next
+          end
+
+          if key - last_key != 1 || (value - last_value).abs > 1
+            int_elements << [start_key..last_key, start_value..last_value]
+            start_key = key
+            start_value = value
+          end
+
+          last_key = key
+          last_value = value
+        end
+
+        lingering = [start_key..last_key, start_value..last_value]
+        int_elements << lingering unless int_elements.last == lingering
+
+        int_elements = int_elements.map do |elem|
+          if elem.last.size == 1
+            [elem.first, elem.last.first]
+          else
+            elem
+          end
+        end
+
+        new(int_elements, other_elements)
       end
 
-      def initialize(int_pairs, non_int_pairs = {})
-        @int_pairs = int_pairs
-        @non_int_pairs = non_int_pairs
-        @index_cache = {}
-        @entry_cache = {}
-        @include_cache = {}
+      attr_reader :int_elements, :other_elements
+
+      def initialize(int_elements, other_elements)
+        @int_elements = int_elements
+        @other_elements = other_elements
       end
 
       def init_with(coder)
-        int_pairs = coder[:int_pairs].map do |int_pair|
-          first, last = int_pair[1].split('..')
-          [int_pair[0], (first.to_i)..(last.to_i), int_pair[2]]
+        int_elems = coder[:int_elements].map do |int_elem|
+          first, last = int_elem[0].split('..')
+          key = (first.to_i)..(last.to_i)
+
+          value = if int_elem[1].is_a?(String)
+            first, last = int_elem[1].split('..')
+            (first.to_i)..(last.to_i)
+          else
+            int_elem[1].to_i
+          end
+
+          [key, value]
         end
 
-        initialize(int_pairs, coder[:non_int_pairs])
+        initialize(int_elems, coder[:other_elements])
+      end
+
+      def encode_with(coder)
+        coder[:int_elements] = @int_elements.map do |int_element|
+          [
+            "#{int_element[0].first}..#{int_element[0].last}",
+            int_element[1].is_a?(Range) ? "#{int_element[1].first}..#{int_element[1].last}" : int_element[1]
+          ]
+        end
+
+        coder[:other_elements] = @other_elements
       end
 
       def [](key)
-        @entry_cache[key] ||= begin
-          if key.is_a?(Integer)
-            if idx = find(key)
-              @int_pairs[idx].last
-            end
-          else
-            @non_int_pairs[key]
-          end
+        cache[key] ||= begin
+          return other_elements[key] unless key.is_a?(Integer)
+          key_range, val_or_range = find(key)
+          return nil unless key_range
+          return val_or_range if val_or_range.is_a?(Integer)
+          val_or_range.first + (key - key_range.first)
         end
       end
 
       def include?(key)
-        return @non_int_pairs.include?(key) unless key.is_a?(Integer)
-        range = find(key)
-        return !!range
-      end
-
-      def encode_with(coder)
-        coder[:int_pairs] = @int_pairs.map do |int_pair|
-          [int_pair[0], "#{int_pair[1].first}..#{int_pair[1].last}", int_pair[2]]
-        end
-
-        coder[:non_int_pairs] = @non_int_pairs
+        return other_elements.include?(key) unless key.is_a?(Integer)
+        !!find(key)
       end
 
       private
 
-      def find(key)
-        @index_cache[key] ||= begin
-          idx, _, _ = @int_pairs.bsearch do |pair|
-            if pair[1].cover?(key)
-              0
-            elsif key < pair[1].first
-              -1
-            else
-              1
-            end
-          end
+      def cache
+        @cache ||= {}
+      end
 
-          idx
+      def find(key)
+        int_elements.bsearch do |pair|
+          if pair[0].cover?(key)
+            0
+          elsif key < pair[0].first
+            -1
+          else
+            1
+          end
         end
       end
     end

@@ -6,1015 +6,854 @@
 :left:
   :table:
     0: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 67..67
+      :int_elements:
+      - - 67..67
         - 56
-      - - 1
-        - 68..68
+      - - 68..68
         - 123
-      - - 2
-        - 71..71
+      - - 71..71
         - 70
-      - - 3
-        - 73..73
+      - - 73..73
         - 132
-      - - 4
-        - 76..76
+      - - 76..76
         - 143
-      - - 5
-        - 77..77
+      - - 77..77
         - 106
-      - - 6
-        - 78..78
+      - - 78..78
         - 1
-      - - 7
-        - 79..79
+      - - 79..79
         - 75
-      - - 8
-        - 83..83
+      - - 83..83
         - 81
-      - - 9
-        - 85..85
+      - - 85..85
         - 151
-      - - 10
-        - 97..97
+      - - 97..97
         - 30
-      - - 11
-        - 99..99
+      - - 99..99
         - 50
-      - - 12
-        - 100..100
+      - - 100..100
         - 13
-      - - 13
-        - 102..102
+      - - 102..102
         - 46
-      - - 14
-        - 105..105
+      - - 105..105
         - 136
-      - - 15
-        - 109..109
+      - - 109..109
         - 127
-      - - 16
-        - 111..111
+      - - 111..111
         - 140
-      - - 17
-        - 112..112
+      - - 112..112
         - 110
-      - - 18
-        - 114..114
+      - - 114..114
         - 102
-      - - 19
-        - 115..115
+      - - 115..115
         - 157
-      - - 20
-        - 116..116
+      - - 116..116
         - 117
-      - - 21
-        - 118..118
+      - - 118..118
         - 63
-      :non_int_pairs: {}
+      :other_elements: {}
     1: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 2
-      :non_int_pairs: {}
+      :other_elements: {}
     2: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 66..66
+      :int_elements:
+      - - 66..66
         - 3
-      - - 1
-        - 100..100
+      - - 100..100
         - 5
-      :non_int_pairs: {}
+      :other_elements: {}
     3: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 4
-      :non_int_pairs: {}
+      :other_elements: {}
     4: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     5: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 6
-      :non_int_pairs: {}
+      :other_elements: {}
     6: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 65..65
+      :int_elements:
+      - - 65..65
         - 7
-      - - 1
-        - 69..69
+      - - 69..69
         - 11
-      - - 2
-        - 84..84
+      - - 84..84
         - 9
-      :non_int_pairs: {}
+      :other_elements: {}
     7: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 8
-      :non_int_pairs: {}
+      :other_elements: {}
     8: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     9: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 10
-      :non_int_pairs: {}
+      :other_elements: {}
     10: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     11: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 12
-      :non_int_pairs: {}
+      :other_elements: {}
     12: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     13: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 17
-      - - 1
-        - 105..105
+      - - 105..105
         - 14
-      - - 2
-        - 111..111
+      - - 111..111
         - 24
-      - - 3
-        - 114..114
+      - - 114..114
         - 28
-      :non_int_pairs: {}
+      :other_elements: {}
     14: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 118..118
+      :int_elements:
+      - - 118..118
         - 15
-      :non_int_pairs: {}
+      :other_elements: {}
     15: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 16
-      :non_int_pairs: {}
+      :other_elements: {}
     16: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     17: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 67..67
+      :int_elements:
+      - - 67..67
         - 22
-      - - 1
-        - 112..112
+      - - 112..112
         - 18
-      :non_int_pairs: {}
+      :other_elements: {}
     18: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 19
-      :non_int_pairs: {}
+      :other_elements: {}
     19: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 82..82
+      :int_elements:
+      - - 82..82
         - 20
-      :non_int_pairs: {}
+      :other_elements: {}
     20: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 21
-      :non_int_pairs: {}
+      :other_elements: {}
     21: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     22: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 23
-      :non_int_pairs: {}
+      :other_elements: {}
     23: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     24: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 116..116
+      :int_elements:
+      - - 116..116
         - 25
-      :non_int_pairs: {}
+      :other_elements: {}
     25: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 116..116
+      :int_elements:
+      - - 116..116
         - 26
-      :non_int_pairs: {}
+      :other_elements: {}
     26: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 27
-      :non_int_pairs: {}
+      :other_elements: {}
     27: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     28: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 29
-      :non_int_pairs: {}
+      :other_elements: {}
     29: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     30: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 31
-      - - 1
-        - 103..103
+      - - 103..103
         - 38
-      - - 2
-        - 108..108
+      - - 108..108
         - 43
-      - - 3
-        - 114..114
+      - - 114..114
         - 34
-      - - 4
-        - 118..118
+      - - 118..118
         - 40
-      :non_int_pairs: {}
+      :other_elements: {}
     31: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 67..67
+      :int_elements:
+      - - 67..67
         - 32
-      :non_int_pairs: {}
+      :other_elements: {}
     32: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 33
-      :non_int_pairs: {}
+      :other_elements: {}
     33: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     34: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 99..99
+      :int_elements:
+      - - 99..99
         - 35
-      :non_int_pairs: {}
+      :other_elements: {}
     35: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 104..104
+      :int_elements:
+      - - 104..104
         - 36
-      :non_int_pairs: {}
+      :other_elements: {}
     36: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 37
-      :non_int_pairs: {}
+      :other_elements: {}
     37: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     38: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 39
-      :non_int_pairs: {}
+      :other_elements: {}
     39: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     40: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 118..118
+      :int_elements:
+      - - 118..118
         - 41
-      :non_int_pairs: {}
+      :other_elements: {}
     41: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 42
-      :non_int_pairs: {}
+      :other_elements: {}
     42: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     43: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 108..108
+      :int_elements:
+      - - 108..108
         - 44
-      :non_int_pairs: {}
+      :other_elements: {}
     44: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 45
-      :non_int_pairs: {}
+      :other_elements: {}
     45: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     46: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 105..105
+      :int_elements:
+      - - 105..105
         - 47
-      :non_int_pairs: {}
+      :other_elements: {}
     47: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 103..103
+      :int_elements:
+      - - 103..103
         - 48
-      :non_int_pairs: {}
+      :other_elements: {}
     48: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 49
-      :non_int_pairs: {}
+      :other_elements: {}
     49: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     50: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 51
-      :non_int_pairs: {}
+      :other_elements: {}
     51: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 99..99
+      :int_elements:
+      - - 99..99
         - 52
-      :non_int_pairs: {}
+      :other_elements: {}
     52: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 53
-      :non_int_pairs: {}
+      :other_elements: {}
     53: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 112..112
+      :int_elements:
+      - - 112..112
         - 54
-      :non_int_pairs: {}
+      :other_elements: {}
     54: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 55
-      :non_int_pairs: {}
+      :other_elements: {}
     55: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     56: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 60
-      - - 1
-        - 102..102
+      - - 102..102
         - 57
-      :non_int_pairs: {}
+      :other_elements: {}
     57: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 114..114
+      :int_elements:
+      - - 114..114
         - 58
-      :non_int_pairs: {}
+      :other_elements: {}
     58: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 59
-      :non_int_pairs: {}
+      :other_elements: {}
     59: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     60: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 80..80
+      :int_elements:
+      - - 80..80
         - 61
-      :non_int_pairs: {}
+      :other_elements: {}
     61: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 62
-      :non_int_pairs: {}
+      :other_elements: {}
     62: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     63: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 101..101
+      :int_elements:
+      - - 101..101
         - 67
-      - - 1
-        - 111..111
+      - - 111..111
         - 64
-      :non_int_pairs: {}
+      :other_elements: {}
     64: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 108..108
+      :int_elements:
+      - - 108..108
         - 65
-      :non_int_pairs: {}
+      :other_elements: {}
     65: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 66
-      :non_int_pairs: {}
+      :other_elements: {}
     66: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     67: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 114..114
+      :int_elements:
+      - - 114..114
         - 68
-      :non_int_pairs: {}
+      :other_elements: {}
     68: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 69
-      :non_int_pairs: {}
+      :other_elements: {}
     69: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     70: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 101..101
+      :int_elements:
+      - - 101..101
         - 71
-      :non_int_pairs: {}
+      :other_elements: {}
     71: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 111..111
+      :int_elements:
+      - - 111..111
         - 72
-      :non_int_pairs: {}
+      :other_elements: {}
     72: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 109..109
+      :int_elements:
+      - - 109..109
         - 73
-      :non_int_pairs: {}
+      :other_elements: {}
     73: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 74
-      :non_int_pairs: {}
+      :other_elements: {}
     74: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     75: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 76
-      :non_int_pairs: {}
+      :other_elements: {}
     76: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 100..100
+      :int_elements:
+      - - 100..100
         - 77
-      :non_int_pairs: {}
+      :other_elements: {}
     77: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 78
-      :non_int_pairs: {}
+      :other_elements: {}
     78: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 71..71
+      :int_elements:
+      - - 71..71
         - 79
-      :non_int_pairs: {}
+      :other_elements: {}
     79: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 80
-      :non_int_pairs: {}
+      :other_elements: {}
     80: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     81: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 82
-      - - 1
-        - 105..105
+      - - 105..105
         - 99
-      :non_int_pairs: {}
+      :other_elements: {}
     82: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 65..65
+      :int_elements:
+      - - 65..65
         - 95
-      - - 1
-        - 77..77
+      - - 77..77
         - 87
-      - - 2
-        - 112..112
+      - - 112..112
         - 83
-      :non_int_pairs: {}
+      :other_elements: {}
     83: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 84
-      :non_int_pairs: {}
+      :other_elements: {}
     84: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 65..65
+      :int_elements:
+      - - 65..65
         - 85
-      :non_int_pairs: {}
+      :other_elements: {}
     85: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 86
-      :non_int_pairs: {}
+      :other_elements: {}
     86: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     87: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 88
-      :non_int_pairs: {}
+      :other_elements: {}
     88: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 65..65
+      :int_elements:
+      - - 65..65
         - 89
-      :non_int_pairs: {}
+      :other_elements: {}
     89: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 90
-      :non_int_pairs: {}
+      :other_elements: {}
     90: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 82..82
+      :int_elements:
+      - - 82..82
         - 91
-      :non_int_pairs: {}
+      :other_elements: {}
     91: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 92
-      :non_int_pairs: {}
+      :other_elements: {}
     92: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 84..84
+      :int_elements:
+      - - 84..84
         - 93
-      :non_int_pairs: {}
+      :other_elements: {}
     93: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 94
-      :non_int_pairs: {}
+      :other_elements: {}
     94: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     95: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 96
-      :non_int_pairs: {}
+      :other_elements: {}
     96: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 82..82
+      :int_elements:
+      - - 82..82
         - 97
-      :non_int_pairs: {}
+      :other_elements: {}
     97: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 98
-      :non_int_pairs: {}
+      :other_elements: {}
     98: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     99: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 103..103
+      :int_elements:
+      - - 103..103
         - 100
-      :non_int_pairs: {}
+      :other_elements: {}
     100: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 101
-      :non_int_pairs: {}
+      :other_elements: {}
     101: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     102: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 97..97
+      :int_elements:
+      - - 97..97
         - 103
-      :non_int_pairs: {}
+      :other_elements: {}
     103: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 103..103
+      :int_elements:
+      - - 103..103
         - 104
-      :non_int_pairs: {}
+      :other_elements: {}
     104: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 105
-      :non_int_pairs: {}
+      :other_elements: {}
     105: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     106: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 111..111
+      :int_elements:
+      - - 111..111
         - 107
-      :non_int_pairs: {}
+      :other_elements: {}
     107: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 100..100
+      :int_elements:
+      - - 100..100
         - 108
-      :non_int_pairs: {}
+      :other_elements: {}
     108: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 109
-      :non_int_pairs: {}
+      :other_elements: {}
     109: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     110: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 114
-      - - 1
-        - 97..97
+      - - 97..97
         - 111
-      :non_int_pairs: {}
+      :other_elements: {}
     111: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 103..103
+      :int_elements:
+      - - 103..103
         - 112
-      :non_int_pairs: {}
+      :other_elements: {}
     112: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 113
-      :non_int_pairs: {}
+      :other_elements: {}
     113: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     114: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 105..105
+      :int_elements:
+      - - 105..105
         - 115
-      :non_int_pairs:
+      :other_elements:
         :else: 160
     115: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 116
-      :non_int_pairs: {}
+      :other_elements: {}
     116: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     117: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 97..97
+      :int_elements:
+      - - 97..97
         - 118
-      :non_int_pairs: {}
+      :other_elements: {}
     118: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 98..98
+      :int_elements:
+      - - 98..98
         - 121
-      - - 1
-        - 118..118
+      - - 118..118
         - 119
-      :non_int_pairs: {}
+      :other_elements: {}
     119: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 120
-      :non_int_pairs: {}
+      :other_elements: {}
     120: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     121: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 122
-      :non_int_pairs: {}
+      :other_elements: {}
     122: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     123: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 126
-      - - 1
-        - 67..67
+      - - 67..67
         - 124
-      :non_int_pairs: {}
+      :other_elements: {}
     124: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 125
-      :non_int_pairs: {}
+      :other_elements: {}
     125: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     126: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     127: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 105..105
+      :int_elements:
+      - - 105..105
         - 128
-      :non_int_pairs: {}
+      :other_elements: {}
     128: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 116..116
+      :int_elements:
+      - - 116..116
         - 129
-      :non_int_pairs: {}
+      :other_elements: {}
     129: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 116..116
+      :int_elements:
+      - - 116..116
         - 130
-      :non_int_pairs: {}
+      :other_elements: {}
     130: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 131
-      :non_int_pairs: {}
+      :other_elements: {}
     131: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     132: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 110..110
+      :int_elements:
+      - - 110..110
         - 133
-      :non_int_pairs: {}
+      :other_elements: {}
     133: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 103..103
+      :int_elements:
+      - - 103..103
         - 134
-      :non_int_pairs: {}
+      :other_elements: {}
     134: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 135
-      :non_int_pairs: {}
+      :other_elements: {}
     135: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     136: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 110..110
+      :int_elements:
+      - - 110..110
         - 137
-      :non_int_pairs: {}
+      :other_elements: {}
     137: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 116..116
+      :int_elements:
+      - - 116..116
         - 138
-      :non_int_pairs: {}
+      :other_elements: {}
     138: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 139
-      :non_int_pairs: {}
+      :other_elements: {}
     139: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     140: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 110..110
+      :int_elements:
+      - - 110..110
         - 141
-      :non_int_pairs: {}
+      :other_elements: {}
     141: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 142
-      :non_int_pairs: {}
+      :other_elements: {}
     142: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     143: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 144
-      - - 1
-        - 105..105
+      - - 105..105
         - 148
-      - - 2
-        - 116..116
+      - - 116..116
         - 145
-      :non_int_pairs: {}
+      :other_elements: {}
     144: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     145: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 100..100
+      :int_elements:
+      - - 100..100
         - 146
-      :non_int_pairs: {}
+      :other_elements: {}
     146: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 147
-      :non_int_pairs: {}
+      :other_elements: {}
     147: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     148: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 118..118
+      :int_elements:
+      - - 118..118
         - 149
-      :non_int_pairs: {}
+      :other_elements: {}
     149: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 150
-      :non_int_pairs: {}
+      :other_elements: {}
     150: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     151: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 152
-      :non_int_pairs: {}
+      :other_elements: {}
     152: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 83..83
+      :int_elements:
+      - - 83..83
         - 153
-      :non_int_pairs: {}
+      :other_elements: {}
     153: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 154
-      :non_int_pairs: {}
+      :other_elements: {}
     154: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 65..65
+      :int_elements:
+      - - 65..65
         - 155
-      :non_int_pairs:
+      :other_elements:
         :else: 160
     155: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 156
-      :non_int_pairs: {}
+      :other_elements: {}
     156: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs: []
-      :non_int_pairs:
+      :int_elements: []
+      :other_elements:
         :else: 160
     157: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 101..101
+      :int_elements:
+      - - 101..101
         - 158
-      :non_int_pairs: {}
+      :other_elements: {}
     158: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 122..122
+      :int_elements:
+      - - 122..122
         - 159
-      :non_int_pairs: {}
+      :other_elements: {}
     159: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 46..46
+      :int_elements:
+      - - 46..46
         - 160
-      :non_int_pairs: {}
+      :other_elements: {}
     160: !ruby/object:TwitterCldr::Utils::RangeHash
-      :int_pairs:
-      - - 0
-        - 32..32
+      :int_elements:
+      - - 32..32
         - 161
-      :non_int_pairs: {}
+      :other_elements: {}
   :exit_state: 161
 :right:
   :table: {}

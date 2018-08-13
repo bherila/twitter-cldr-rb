@@ -24,12 +24,8 @@ module TwitterCldr
         rule_set.reset
         last_boundary = cursor.position
 
-        # implicit start of text boundary
-        yield 0 if cursor.position == 0
-
         until cursor.position >= end_pos
           rule = rule_set.find_match(cursor)
-          # binding.pry if cursor.position >= 122
 
           if rule.break? && cursor.position != last_boundary
             yield cursor.position
