@@ -110,8 +110,14 @@ module TwitterCldr
         !!find(key)
       end
 
-      def to_h
+      def keys
         int_elements.flat_map { |elem| elem.first.to_a } + other_elements.keys
+      end
+
+      def to_h
+        keys.each_with_object({}) do |k, ret|
+          ret[k] = self[k]
+        end
       end
 
       private
