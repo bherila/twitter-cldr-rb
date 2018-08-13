@@ -11,6 +11,7 @@ module TwitterCldr
         last_value = nil
         start_key = nil
         start_value = nil
+        step = nil
         int_elements = []
 
         int_keys, other_keys = hash.keys.partition { |k| k.is_a?(Integer) }
@@ -31,10 +32,13 @@ module TwitterCldr
             next
           end
 
-          if key - last_key != 1 || (value - last_value).abs > 1
+          step ||= (value - last_value).abs
+
+          if key - last_key != 1 || step > 1 || (value - last_value).abs != step
             int_elements << [start_key..last_key, start_value..last_value]
             start_key = key
             start_value = value
+            step = nil
           end
 
           last_key = key
