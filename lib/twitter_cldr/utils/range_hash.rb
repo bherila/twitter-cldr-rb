@@ -110,6 +110,10 @@ module TwitterCldr
         !!find(key)
       end
 
+      def to_h
+        int_elements.flat_map { |elem| elem.first.to_a } + other_elements.keys
+      end
+
       private
 
       def cache
