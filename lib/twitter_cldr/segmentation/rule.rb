@@ -39,6 +39,14 @@ module TwitterCldr
         @left.reset
         @right.reset
       end
+
+      def <(other)
+        id < other.id
+      end
+
+      def >(other)
+        id > other.id
+      end
     end
 
     class BreakRule < Rule

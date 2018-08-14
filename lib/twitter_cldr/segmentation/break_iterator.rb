@@ -106,7 +106,6 @@ module TwitterCldr
 
         # implicit start of text boundary
         last_boundary = 0
-        yield 0
 
         until cursor.eos?
           stop = cursor.position

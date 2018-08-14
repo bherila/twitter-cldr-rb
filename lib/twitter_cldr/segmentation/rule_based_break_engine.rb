@@ -22,10 +22,14 @@ module TwitterCldr
         return to_enum(__method__, cursor, end_pos) unless block_given?
 
         rule_set.reset
+
+        # implicit start boundary
+        yield cursor.position
         last_boundary = cursor.position
 
         until cursor.position >= end_pos
           rule = rule_set.find_match(cursor)
+          # puts [cursor.position, rule.id].inspect
 
           if rule.break? && cursor.position != last_boundary
             yield cursor.position

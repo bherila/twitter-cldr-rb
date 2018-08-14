@@ -6,6 +6,20 @@
 module TwitterCldr
   module Segmentation
 
+    class Min
+      attr_reader :value
+
+      def initialize(value = nil)
+        @value = value
+      end
+
+      def <<(new_value)
+        if value.nil? || new_value < value
+          @value = new_value
+        end
+      end
+    end
+
     class RuleSet
       class << self
         def build_new(locale, boundary_type, options = {})
@@ -106,7 +120,7 @@ module TwitterCldr
 
       def reset
         reset_rules
-        @boundary_cache = {}
+        @boundary_cache = Hash.new { |h, k| h[k] = Min.new }
       end
 
       def find_match(cursor)
@@ -117,12 +131,13 @@ module TwitterCldr
         until rules.empty?
           rules.reject! do |rule|
             if rule.terminal?
-              @boundary_cache[counter - rule.right.num_accepted] ||= rule
+              @boundary_cache[counter - rule.right.num_accepted] << rule
+              true
             elsif !rule.accept(cursor.codepoints[counter])
               # need to check terminal? again because we just called #accept
               # on the rule
               if rule.terminal?
-                @boundary_cache[counter - rule.right.num_accepted] ||= rule
+                @boundary_cache[counter - rule.right.num_accepted] << rule
               end
 
               true
@@ -134,9 +149,10 @@ module TwitterCldr
           counter += 1
         end
 
-        if match = @boundary_cache[cursor.position]
-          @boundary_cache.delete(cursor.position)
-          match
+        if @boundary_cache.include?(cursor.position)
+          @boundary_cache[cursor.position].value.tap do
+            @boundary_cache.delete(cursor.position)
+          end
         else
           @implicit_break
         end
