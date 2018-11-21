@@ -15,6 +15,8 @@ module TwitterCldr
         end
 
         def build(boundary_type)
+          puts boundary_type
+          $boundary_type = boundary_type
           boundary_name = boundary_name_for(boundary_type)
           boundary_data = resource_for(boundary_name)
           symbol_table = symbol_table_for(boundary_data)
@@ -61,6 +63,8 @@ module TwitterCldr
         end
 
         def rule_for(boundary_data, symbol_table)
+          puts boundary_data[:id]
+          $boundary_id = boundary_data[:id]
           boundary_symbol, left, right = parse(boundary_data[:value], symbol_table)
           left = RuleVisitor.new(left).start || StateTable.new({}, 0)
           right = RuleVisitor.new(right).start || StateTable.new({}, 0)

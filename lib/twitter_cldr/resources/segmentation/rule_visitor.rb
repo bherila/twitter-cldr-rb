@@ -29,6 +29,12 @@ module TwitterCldr
         end
 
         def visit(node)
+          if node.is_a?(UnicodeRegex)
+            puts "\n"
+          else
+            puts node.class
+          end
+
           case node
             when UnicodeRegex
               visit_regex(node)
@@ -96,13 +102,21 @@ module TwitterCldr
         def visit_alternation(node)
           trie = TwitterCldr::Utils::Trie.new
 
+          if $boundary_id == 7 && $boundary_type == 'sentence'
+            alternates = node.elements.map do |alt_group|
+              collapse(alt_group.map { |alt_elem| visit(alt_elem) })
+            end
+
+            binding.pry
+          end
+
           node.elements.each do |alt_group|
             alternate = collapse(alt_group.map { |alt_elem| visit(alt_elem) })
             load_into_trie(alternate, [], 0, trie)
           end
 
           table = blank_table
-          exit_state = trie_to_table(trie.root, table, 0)
+          exit_state = trie_to_table(trie.root, table, 0, nil)
           table.delete(exit_state)
           table = StateTable.new(table, exit_state)
 
@@ -111,37 +125,81 @@ module TwitterCldr
             next_state
           end
 
+          table = simplify(table)
           quantify(table, node.quantifier)
         end
 
-        def trie_to_table(root, table, state)
+        def n_intersection(arrs)
+          shortest = nil
+          rest = []
+
+          arrs.each do |arr|
+            shortest ||= arr
+
+            if arr.size <= shortest.size
+              shortest = arr
+            else
+              rest << arr
+            end
+          end
+
+          shortest.each_with_object([]) do |item, ret|
+            ret << item if rest.all? { |r| r.include?(item) }
+          end
+        end
+
+        def simplify(table)
+          while table[table.exit_state - 1] == { else: table.exit_state }
+            table.table.delete(table.exit_state - 1)
+
+            table = table.rewrite_next_states do |next_state|
+              next table.exit_state - 1 if next_state == table.exit_state
+              next_state
+            end
+          end
+
+          table
+        end
+
+        def trie_to_table(root, table, state, parent_cp)
           if root.has_value?
-            table[state][:else] = :exit
+            if root.value == :stay
+              table[state][parent_cp] = state
+            else
+              table[state][:else] = :exit
+            end
           end
 
           current_state = state
 
           root.each_key_and_child do |cp, child|
             table[current_state][cp] = state + 1
-            state = trie_to_table(child, table, state + 1)
+            state = trie_to_table(child, table, state + 1, cp)
           end
 
           state
         end
 
-        def load_into_trie(table, path, state, trie)
+        def load_into_trie(table, cp_path, state, trie)
+          puts cp_path.inspect if $boundary_id == 7 && $boundary_type == 'sentence'
+
           if state == table.exit_state
-            trie.add(path, table.exit_state)
+            trie.add(cp_path, :exit)
             return
           end
 
           table[state].each_pair do |cp, next_state|
-            load_into_trie(table, path + [cp], next_state, trie)
+            if state == next_state
+              # avoid infinite recursion
+              trie.add(cp_path, :stay)
+            else
+              load_into_trie(table, cp_path + [cp], next_state, trie)
+            end
           end
         end
 
         def visit_group(node)
-          quantify(visit_children(node).first, node.quantifier)
+          quantify(collapse(visit_children(node)), node.quantifier)
         end
 
         def visit_unicode_string(node)

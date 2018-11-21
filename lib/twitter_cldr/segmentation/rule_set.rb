@@ -130,14 +130,15 @@ module TwitterCldr
 
         until rules.empty?
           rules.reject! do |rule|
+            # binding.pry if rule.id == 11 && counter == 1
             if rule.terminal?
-              @boundary_cache[counter - rule.right.num_accepted] << rule
+              @boundary_cache[cursor.position + rule.left.num_accepted] << rule
               true
             elsif !rule.accept(cursor.codepoints[counter])
               # need to check terminal? again because we just called #accept
               # on the rule
               if rule.terminal?
-                @boundary_cache[counter - rule.right.num_accepted] << rule
+                @boundary_cache[cursor.position + rule.left.num_accepted] << rule
               end
 
               true
